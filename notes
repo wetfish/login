@@ -1,0 +1,14 @@
+Notes
+
+Include client side library
+Trigger login function when necessary
+    - Login window appears
+Loads login.wetfish.net 
+Prompts for username/password or register
+If user signs in successfully
+    - Redirected to callback url with a token
+The callback page records the user's session and their token
+The callback page makes a request back to the login server
+The login server responds with basic information about the user based on the token
+
+The app and the login server should have some sort of a shared secret/API key for message verification 
