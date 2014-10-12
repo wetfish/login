@@ -4,11 +4,11 @@
   "author": "Rachel <rachel@wetfish.net>",
   "description": "A login system for wetfish. Kinda like oAuth?",
   "dependencies" : {
-    "jquery": "*",
     "express": "*",
     "express-session": "*",
     "connect-redis": "*",
-    "socket.io": "*"
+    "hjs": "*",
+    "body-parser": "*"
   },
   "license": "GPL"
 }
