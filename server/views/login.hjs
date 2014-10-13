@@ -1,0 +1,3 @@
+{{> head}}
+    THIS IS THE LOGIN PAGE!~
+{{> foot}}

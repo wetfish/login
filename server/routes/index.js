@@ -2,10 +2,9 @@ module.exports = function(app)
 {
     app.get('/', function(req, res)
     {
-        console.log("Home page loaded!");
+        console.log("GET: /");
         res.render('index', {
-            title: 'Wetfish!',
-            message: 'Hello World :)',
+            title: 'Hello!',
             partials: {
                 head: 'partials/head',
                 foot: 'partials/foot'

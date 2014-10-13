@@ -9,6 +9,7 @@ module.exports = function(app)
      *
      * Full name
      * Birthday
+     * Phone number
      * Address
      * City
      * State
