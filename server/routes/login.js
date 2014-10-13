@@ -15,5 +15,7 @@ module.exports = function(app)
     app.post('/login', function(req, res)
     {
         console.log("POST: /login");
+        res.send(JSON.stringify(req.body));
+        res.end();
     });
 }

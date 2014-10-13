@@ -15,5 +15,7 @@ module.exports = function(app)
     app.post('/register', function(req, res)
     {
         console.log("POST: /register");
+        res.send(JSON.stringify(req.body));
+        res.end();
     });
 }

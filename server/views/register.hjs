@@ -1,3 +1,32 @@
 {{> head}}
-    Hello would you like to register?
+    <h1>Register</h1>
+
+    <form method="post" action="/register">
+        <div>
+            <label>Username</label>
+            <input name="username">
+        </div>
+
+        <div>
+            <label>Email</label>
+            <input name="email">
+        </div>
+
+        <div>
+            <label>Password</label>
+            <input name="password" type="password">
+        </div>
+
+        <div>
+            <label>Confirm Password</label>
+            <input name="confirm" type="password">
+        </div>
+
+        <div>
+            <input type="submit" value="Submit">
+        </div>
+
+    </form>
+
+    Already have an account? <a href="/login">Login!</a>
 {{> foot}}
