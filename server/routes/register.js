@@ -72,6 +72,9 @@ module.exports = function(required)
             if(response[1])
                 errors.email = "This email is already in use";
 
+            if(validator.isEmail(req.body.username))
+                errors.username = "Your username cannot be an email";
+
             if(!validator.isEmail(req.body.email))
                 errors.email = "Your email is invalid";
                 
@@ -81,7 +84,8 @@ module.exports = function(required)
             if(req.body.password != req.body.confirm)
                 errors.confirm = "Your passwords do not match";
 
-            if(errors.length)
+            // If an error has been set
+            if(Object.keys(errors).length)
             {
                 res.send(JSON.stringify(errors));
                 res.end();
