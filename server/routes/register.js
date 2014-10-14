@@ -1,57 +1,22 @@
 // Define variables this module requires
-var app, client, async;
-
-var whatever = function(e, r) { cb(e, r) };
+var async, client, model, app;
 
 // Helper functions
 function check_username(username, callback)
 {
-    async.series([
-        function(cb) {
-            client.select(2, function(e, r) { cb(e, r) })
-        },
-        
-        function(cb) {
-            client.get(username, function(e, r) { cb(e, r); })
-        }
-    ],
-
-    function(error, response)
-    {
-        // Return the username to the callback
-        callback(false, response[1]);
-    });
+    client[2].get(username, callback);
 }
 
 function check_email(email, callback)
 {
-    async.series([
-        function(cb) {
-            client.select(3, function(e, r) { cb(e, r) })
-        },
-        
-        function(cb) {
-            client.get(email, function(e, r) { cb(e, r); })
-        }
-    ],
-
-    function(error, response)
-    {
-        // Return the email to the callback
-        callback(false, response[1]);
-    });
+    client[3].get(email, callback);
 }
 
 function check_existing(username, email, callback)
 {
-    async.series([
-        function(cb) {
-            check_username(username, function(e, r) { cb(e, r) });
-        },
-        
-        function(cb) {
-            check_email(email, function(e, r) { cb(e, r) });
-        }
+    async.parallel([
+        model.async(null, check_username, [username]),
+        model.async(null, check_email, [email])
     ],
 
     function(error, response)
@@ -66,6 +31,7 @@ module.exports = function(required)
 {
     async = required.async;
     client = required.client;
+    model = required.model;
     app = required.app;
     
     app.get('/register', function(req, res)
@@ -82,17 +48,21 @@ module.exports = function(required)
 
     app.post('/register', function(req, res)
     {
+        console.log("POST: /register");
+
         check_existing(req.body.username, req.body.email, function(error, response)
         {
-            if(response[0] || response[1])
-            {
-                console.log("TAKEN!");
-            }
-            console.log(error, response);
+            var errors = {};
+            
+            if(response[0])
+                errors.username = "This username is taken";
+
+            if(response[1])
+                errors.email = "This email is already in use";
+                
+            res.send(JSON.stringify(errors));
+            res.end();
+
         })
-        
-        console.log("POST: /register");
-        res.send(JSON.stringify(req.body));
-        res.end();
     });
 }

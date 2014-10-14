@@ -19,7 +19,7 @@ model.connect(function()
     app.set('view engine', 'hjs');
 
     require('./routes/index.js')(app);
-    require('./routes/register.js')({async: async, app: app, client: client});
+    require('./routes/register.js')({async: async, app: app, client: client, model: model});
     require('./routes/login.js')(app);
     require('./routes/api/create.js')(app);
     require('./routes/api/verify.js')(app);
