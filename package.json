@@ -9,6 +9,7 @@
     "body-parser": "*",
     "redis": "*",
     "async": "*",
+    "validator": "*",
     "express-session": "*",
     "connect-redis": "*"
   },

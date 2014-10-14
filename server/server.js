@@ -3,6 +3,7 @@ var bodyParser = require('body-parser');
 var path = require('path');
 var redis = require('redis');
 var async = require('async');
+var validator = require('validator');
 var app = express();
 
 var client = [];
@@ -19,7 +20,7 @@ model.connect(function()
     app.set('view engine', 'hjs');
 
     require('./routes/index.js')(app);
-    require('./routes/register.js')({async: async, app: app, client: client, model: model});
+    require('./routes/register.js')({async: async, app: app, client: client, model: model, validator: validator});
     require('./routes/login.js')(app);
     require('./routes/api/create.js')(app);
     require('./routes/api/verify.js')(app);
