@@ -5,10 +5,12 @@
   "description": "A login system for wetfish. Kinda like oAuth?",
   "dependencies" : {
     "express": "*",
-    "express-session": "*",
-    "connect-redis": "*",
     "hjs": "*",
-    "body-parser": "*"
+    "body-parser": "*",
+    "redis": "*",
+    "async": "*",
+    "express-session": "*",
+    "connect-redis": "*"
   },
   "license": "GPL"
 }
