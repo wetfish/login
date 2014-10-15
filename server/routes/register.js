@@ -1,5 +1,13 @@
-// Define variables this module requires
-var async, validator, bcrypt, client, model, app;
+// Required modules
+var async = require('async');
+var validator = require('validator');
+var bcrypt = require('bcrypt');
+var crypto = require('crypto');
+
+
+// Variables passed from server.js
+var client, model, app;
+
 
 // Helper functions
 function check_username(username, callback)
@@ -29,9 +37,6 @@ function check_existing(username, email, callback)
 // Module called by express
 module.exports = function(required)
 {
-    async = required.async;
-    validator = required.validator;
-    bcrypt = required.bcrypt;
     client = required.client;
     model = required.model;
     app = required.app;
@@ -95,27 +100,34 @@ module.exports = function(required)
             {
                 async.waterfall([
                     // Generate random salt
-                    model.async(null, bcrypt.genSalt, [13]),
+                    model.async(null, bcrypt.genSalt, [14]),
                     // Hash password using salt
                     model.async(null, bcrypt.hash, [req.body.password])
                 ],
 
                 function(error, response)
                 {
+                    if(!error && response)
+                    {
+                        // Generate email verification token
+                        var salt = crypto.randomBytes(32).toString('base64');
+                        var noise = crypto.randomBytes(64).toString('base64');
+                        var token = crypto.createHmac("sha512", salt).update(noise).digest("hex");
+
+                        // Save member information in redis
+                        // Send verification email
+
+                        res.send("WOW YOU DID IT! Also, "+token);
+                   }
+                    else
+                    {
+                        res.send(JSON.stringify({'unknown': 'An error occured while generating your password'}));
+                    }
+
+                    res.end();
+
                     console.log(error, response);
                 });
-                
-//                var salt = crypto.randomBytes(32).toString('base64');
-
-//                var password = crypto.createHmac("sha256", config.secret).update(date + username + password).digest("hex");
-
-                // Generate email verification code
-                // Save member information in redis
-                // Send verification email
-
-                
-                res.send("WOW YOU DID IT!");
-                res.end();
             }
         })
     });

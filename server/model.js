@@ -1,5 +1,11 @@
-// Define variables this module requires
-var async, redis, client;
+// Required modules
+var async = require('async');
+var redis = require('redis');
+
+
+// Variables passed from server.js
+var client;
+
 
 // Redis connection model
 var model = {
@@ -33,13 +39,15 @@ var model = {
         client[1] = redis.createClient(6301);   // Member account data
         client[2] = redis.createClient(6301);   // Username -> Member lookup
         client[3] = redis.createClient(6301);   // Email -> Member lookup
+        client[4] = redis.createClient(6301);   // Email token -> Member lookup
         
         // Select databases for each for our connections
         async.parallel([
             model.async(client[0], client[0].select, [0]),
             model.async(client[1], client[1].select, [1]),
             model.async(client[2], client[2].select, [2]),
-            model.async(client[3], client[3].select, [3])
+            model.async(client[3], client[3].select, [3]),
+            model.async(client[4], client[4].select, [4])
         ],
 
         function(error, message)
@@ -51,9 +59,6 @@ var model = {
 
 module.exports = function(required)
 {
-    async = required.async;
-    redis = required.redis;
     client = required.client;
-
     return model;
 };
