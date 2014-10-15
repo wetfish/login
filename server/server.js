@@ -6,6 +6,10 @@ var app = express();
 var client = [];
 var model = require('./model')({client: client});
 
+// Required config file for saving secret information
+var config = require('./config');
+var sendgrid = require('sendgrid')(config.sendgrid.username, config.sendgrid.password);
+
 // Connect to redis
 model.connect(function()
 {    
@@ -17,7 +21,7 @@ model.connect(function()
     app.set('view engine', 'hjs');
 
     require('./routes/index.js')(app);
-    require('./routes/register.js')({app: app, client: client, model: model});
+    require('./routes/register.js')({app: app, client: client, model: model, sendgrid: sendgrid});
     require('./routes/login.js')(app);
     require('./routes/api/create.js')(app);
     require('./routes/api/verify.js')(app);

@@ -4,9 +4,8 @@ var validator = require('validator');
 var bcrypt = require('bcrypt');
 var crypto = require('crypto');
 
-
 // Variables passed from server.js
-var client, model, app;
+var client, model, app, sendgrid;
 
 
 // Helper functions
@@ -40,6 +39,7 @@ module.exports = function(required)
     client = required.client;
     model = required.model;
     app = required.app;
+    sendgrid = required.sendgrid;
     
     app.get('/register', function(req, res)
     {
@@ -57,7 +57,10 @@ module.exports = function(required)
     {
         console.log("POST: /register");
 
-        check_existing(req.body.username, req.body.email, function(error, response)
+        var username = validator.escape(req.body.username);
+        var email = validator.escape(req.body.email);
+
+        check_existing(username, email, function(error, response)
         {
             var errors = {};
             var fields = ['username', 'email', 'password', 'confirm'];
@@ -78,10 +81,10 @@ module.exports = function(required)
             if(response[1])
                 errors.email = "This email is already in use";
 
-            if(validator.isEmail(req.body.username))
+            if(validator.isEmail(username))
                 errors.username = "Your username cannot be an email";
 
-            if(!validator.isEmail(req.body.email))
+            if(!validator.isEmail(email))
                 errors.email = "Your email is invalid";
                 
             if(req.body.password.length < 8)
@@ -107,6 +110,8 @@ module.exports = function(required)
 
                 function(error, response)
                 {
+                    console.log(error, response);
+
                     if(!error && response)
                     {
                         // Generate email verification token
@@ -115,18 +120,39 @@ module.exports = function(required)
                         var token = crypto.createHmac("sha512", salt).update(noise).digest("hex");
 
                         // Save member information in redis
-                        // Send verification email
+                        
 
-                        res.send("WOW YOU DID IT! Also, "+token);
+                        // Send verification email
+                        var message = {
+                          to      : email,
+                          from    : 'noreply@wetfish.net',
+                          subject : 'New Account Registered',
+                          html    : '<p>Your wetfish account (<strong>'+username+'</strong>) has been successfully registered!</p>' +
+                                    '<p>Please click the following link to activate your account.</p>' +
+                                    '<a href="https://login.wetfish.net/verify?token="'+token+'" target="_blank">https://login.wetfish.net/verify?token='+token+'</a>' +
+                                    '<p>If you did not create this account, simply ignore this message and the account will be automatically deleted in 24 hours.</p>'
+                        };
+
+                        sendgrid.send(message, function(error, response)
+                        {
+                            if(!error)
+                            {
+                                res.send(JSON.stringify({'status': 'success', 'message': 'Thank you for registering! You should recieve an account activation email shortly.'}));
+                            }
+                            else
+                            {
+                                console.error(error);
+                                res.send(JSON.stringify({'status': 'error', 'errors': {'unknown': 'An error occured while sending your verification email'}}));
+                            }
+
+                            res.end();
+                        });
                    }
                     else
                     {
                         res.send(JSON.stringify({'unknown': 'An error occured while generating your password'}));
+                        res.end();
                     }
-
-                    res.end();
-
-                    console.log(error, response);
                 });
             }
         })
