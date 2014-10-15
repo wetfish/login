@@ -6,8 +6,21 @@ var model = {
     // Crazy function for generating functions to pass callbacks to async
     async: function(scope, func, args)
     {
-        return function(callback)
+        return function()
         {
+            var callback, last = arguments.length - 1;
+            
+            for(var i = last; i >= 0; i--)
+            {
+                // The last argument should always be a callback
+                if(i == last)
+                    callback = arguments[i];
+
+                // If there are any remaining arguments
+                else
+                    args.push(arguments[i]);
+            }
+
             args.push(function(error, response) { callback(error, response); });
             func.apply(scope, args);
         }

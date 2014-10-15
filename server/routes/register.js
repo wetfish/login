@@ -1,5 +1,5 @@
 // Define variables this module requires
-var async, validator, client, model, app;
+var async, validator, bcrypt, client, model, app;
 
 // Helper functions
 function check_username(username, callback)
@@ -31,6 +31,7 @@ module.exports = function(required)
 {
     async = required.async;
     validator = required.validator;
+    bcrypt = required.bcrypt;
     client = required.client;
     model = required.model;
     app = required.app;
@@ -92,6 +93,27 @@ module.exports = function(required)
             }
             else
             {
+                async.waterfall([
+                    // Generate random salt
+                    model.async(null, bcrypt.genSalt, [13]),
+                    // Hash password using salt
+                    model.async(null, bcrypt.hash, [req.body.password])
+                ],
+
+                function(error, response)
+                {
+                    console.log(error, response);
+                });
+                
+//                var salt = crypto.randomBytes(32).toString('base64');
+
+//                var password = crypto.createHmac("sha256", config.secret).update(date + username + password).digest("hex");
+
+                // Generate email verification code
+                // Save member information in redis
+                // Send verification email
+
+                
                 res.send("WOW YOU DID IT!");
                 res.end();
             }
