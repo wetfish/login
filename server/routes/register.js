@@ -33,6 +33,25 @@ function check_existing(username, email, callback)
     });
 }
 
+function generate_user_id(callback)
+{
+    var salt = crypto.randomBytes(32).toString('base64');
+    var noise = crypto.randomBytes(32).toString('base64');
+    var user_id = crypto.createHmac("sha256", salt).update(noise).digest("hex");
+
+    // Check to make sure the generated ID doesn't already exist in redis
+    client[1].get(user_id, function(error, response)
+    {
+        // If this user_id isn't taken
+        if(response == null)
+            callback(user_id);
+
+        // Otherwise try generating again (hahah there was a collision, YEAH RIGHT)
+        else
+            generate_user_id(callback);
+    });
+}
+
 // Module called by express
 module.exports = function(required)
 {
@@ -53,6 +72,8 @@ module.exports = function(required)
         });
     });
 
+    // TODO: Split this stuff into separate functions to avoid the MASSIVE NESTING
+    // TODO: Normalize error output
     app.post('/register', function(req, res)
     {
         console.log("POST: /register");
@@ -108,46 +129,78 @@ module.exports = function(required)
                     model.async(null, bcrypt.hash, [req.body.password])
                 ],
 
-                function(error, response)
+                function(error, password)
                 {
-                    console.log(error, response);
-
                     if(!error && response)
                     {
                         // Generate email verification token
                         var salt = crypto.randomBytes(32).toString('base64');
-                        var noise = crypto.randomBytes(64).toString('base64');
-                        var token = crypto.createHmac("sha512", salt).update(noise).digest("hex");
+                        var noise = crypto.randomBytes(32).toString('base64');
+                        var token = crypto.createHmac("sha256", salt).update(noise).digest("hex");
 
-                        // Save member information in redis
-                        
-
-                        // Send verification email
-                        var message = {
-                          to      : email,
-                          from    : 'noreply@wetfish.net',
-                          subject : 'New Account Registered',
-                          html    : '<p>Your wetfish account (<strong>'+username+'</strong>) has been successfully registered!</p>' +
-                                    '<p>Please click the following link to activate your account.</p>' +
-                                    '<a href="https://login.wetfish.net/verify?token="'+token+'" target="_blank">https://login.wetfish.net/verify?token='+token+'</a>' +
-                                    '<p>If you did not create this account, simply ignore this message and the account will be automatically deleted in 24 hours.</p>'
-                        };
-
-                        sendgrid.send(message, function(error, response)
+                        // Generate unique user ID
+                        generate_user_id(function(user_id)
                         {
-                            if(!error)
+                            var user_data =
                             {
-                                res.send(JSON.stringify({'status': 'success', 'message': 'Thank you for registering! You should recieve an account activation email shortly.'}));
-                            }
-                            else
-                            {
-                                console.error(error);
-                                res.send(JSON.stringify({'status': 'error', 'errors': {'unknown': 'An error occured while sending your verification email'}}));
-                            }
+                                username: username,
+                                email: email,
+                                password: password,
+                                token: token
+                            };
 
-                            res.end();
+                            // Automatically delete new users after 24 hours
+                            var timeout = 60 * 60 * 24;
+
+                            // Save member information in redis
+                            async.parallel([
+                                model.async(client[1], client[1].setex, [user_id, timeout, JSON.stringify(user_data)]),
+                                model.async(client[2], client[2].setex, [username, timeout, user_id]),
+                                model.async(client[3], client[3].setex, [email, timeout, user_id]),
+                                model.async(client[4], client[4].setex, [token, timeout, user_id]),
+                            ],
+
+                            function(error, response)
+                            {
+                                if(!error)
+                                {
+                                    // Send verification email
+                                    var message =
+                                    {
+                                        to      : email,
+                                        from    : 'noreply@wetfish.net',
+                                        subject : 'New Account Registered',
+                                        html    : '<p>Your wetfish account (<strong>'+username+'</strong>) has been successfully registered!</p>' +
+                                                  '<p>Please click the following link to activate your account.</p>' +
+                                                  '<a href="https://login.wetfish.net/verify?token="'+token+'" target="_blank">https://login.wetfish.net/verify?token='+token+'</a>' +
+                                                  '<p>If you did not create this account, simply ignore this message and the account will be automatically deleted in 24 hours.</p>'
+                                    };
+
+                                    sendgrid.send(message, function(error, response)
+                                    {
+                                        if(!error)
+                                        {
+                                            res.send(JSON.stringify({'status': 'success', 'message': 'Thank you for registering! You should recieve an account activation email shortly.'}));
+                                        }
+                                        else
+                                        {
+                                            console.error(error);
+                                            res.send(JSON.stringify({'status': 'error', 'errors': {'unknown': 'An error occured while sending your verification email'}}));
+                                        }
+
+                                        res.end();
+                                    });
+                                }
+                                else
+                                {
+                                    console.error(error);
+                                    res.send(JSON.stringify({'status': 'error', 'errors': {'unknown': 'An error occured while saving your account information'}}));
+                                }
+
+                                res.end();
+                            });
                         });
-                   }
+                    }
                     else
                     {
                         res.send(JSON.stringify({'unknown': 'An error occured while generating your password'}));
