@@ -154,10 +154,10 @@ module.exports = function(required)
 
                                 // Save member information in redis
                                 async.parallel([
-                                    model.async(client[1], client[1].setex, [user_id, timeout, JSON.stringify(user_data)]),
-                                    model.async(client[2], client[2].setex, [username, timeout, user_id]),
-                                    model.async(client[3], client[3].setex, [email, timeout, user_id]),
-                                    model.async(client[4], client[4].setex, [token, timeout, user_id]),
+                                    model.async(client[1], client[1].set, [user_id, JSON.stringify(user_data), 'ex', timeout]),
+                                    model.async(client[2], client[2].set, [username, user_id, 'ex', timeout]),
+                                    model.async(client[3], client[3].set, [email, user_id, 'ex', timeout]),
+                                    model.async(client[4], client[4].set, [token, user_id, 'ex', timeout]),
                                 ],
 
                                 function(error, response)
@@ -173,7 +173,7 @@ module.exports = function(required)
                                             subject : 'Account Activation Code',
                                             html    : '<p>Your wetfish account (<strong>'+username+'</strong>) has been successfully registered!</p>' +
                                                       '<p>Please click the following link to activate your account.</p>' +
-                                                      '<a href="https://login.wetfish.net/verify?token="'+token+'" target="_blank">https://login.wetfish.net/verify?token='+token+'</a>' +
+                                                      '<a href="https://login.wetfish.net/verify?token='+token+'" target="_blank">https://login.wetfish.net/verify?token='+token+'</a>' +
                                                       '<p>If you did not create this account, simply ignore this message and the account will be automatically deleted in 24 hours.</p>'
                                         };
 
