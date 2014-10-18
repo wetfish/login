@@ -1,4 +1,6 @@
 var express = require('express');
+var session = require('express-session');
+var RedisStore = require('connect-redis')(session);
 var bodyParser = require('body-parser');
 var path = require('path');
 var app = express();
@@ -12,7 +14,12 @@ var sendgrid = require('sendgrid')(config.sendgrid.username, config.sendgrid.pas
 
 // Connect to redis
 model.connect(function()
-{    
+{
+    app.use(session({
+        store: new RedisStore({client: client[0]}),
+        secret: config.session.secret
+    }));
+    
     // Do everything else!
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: false }));

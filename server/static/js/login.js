@@ -12,6 +12,9 @@ $(document).ready(function()
         event.preventDefault();
         var form = $(this);
 
+        // Remove previous error messages
+        form.parents('.form-wrap').find('.alert').remove();
+
         form.find('input').each(function()
         {
             $(this).siblings('.help-block').remove();
@@ -34,7 +37,7 @@ $(document).ready(function()
                 message.fadeIn();
                 form.parents('.form').fadeOut();
             }
-            else
+            else if(response.status == 'error')
             {
                 $.each(response.errors, function(field, error)
                 {
@@ -60,6 +63,10 @@ $(document).ready(function()
                         }
                     }
                 });
+            }
+            else
+            {
+                console.log(response);
             }
         });
     });
