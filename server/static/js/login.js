@@ -39,30 +39,43 @@ $(document).ready(function()
             }
             else if(response.status == 'error')
             {
-                $.each(response.errors, function(field, error)
+                // Handle generic error messages
+                if(response.message)
                 {
-                    if(field == "unknown")
-                    {
-                        var message = $('<div class="alert alert-danger" style="display:none" role="alert"><strong>Error:</strong> '+error+'</div>');
-                        form.parents('.form-wrap').prepend(message);
+                    var message = $('<div class="alert alert-danger" style="display:none" role="alert"><strong>Error:</strong> '+response.message+'</div>');
+                    form.parents('.form-wrap').prepend(message);
 
-                        message.fadeIn();
-                    }
-                    else
+                    message.fadeIn();
+                }
+                
+                // Handle lists of error messages
+                else
+                {
+                    $.each(response.errors, function(field, error)
                     {
-                        var input = form.find('input[name="'+field+'"]');
-                        
-                        if(input.length)
+                        if(field == "unknown")
                         {
-                            input.parents('.form-group').addClass('has-error');
-
-                            var message = $('<p class="help-block" style="display:none">'+error+'</p>');
-                            input.parents('.col-sm-9').append(message);
+                            var message = $('<div class="alert alert-danger" style="display:none" role="alert"><strong>Error:</strong> '+error+'</div>');
+                            form.parents('.form-wrap').prepend(message);
 
                             message.fadeIn();
                         }
-                    }
-                });
+                        else
+                        {
+                            var input = form.find('input[name="'+field+'"]');
+                            
+                            if(input.length)
+                            {
+                                input.parents('.form-group').addClass('has-error');
+
+                                var message = $('<p class="help-block" style="display:none">'+error+'</p>');
+                                input.parents('.col-sm-9').append(message);
+
+                                message.fadeIn();
+                            }
+                        }
+                    });
+                }
             }
             else
             {

@@ -5,6 +5,7 @@ module.exports = function(app)
         console.log("GET: /");
         res.render('index', {
             title: 'About',
+            user: req.session.user_data.username,
             partials: {
                 head: 'partials/head',
                 header: 'partials/header',
