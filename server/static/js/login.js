@@ -12,6 +12,11 @@ $(document).ready(function()
         event.preventDefault();
         var form = $(this);
 
+        form.find('input').each(function()
+        {
+            $(this).siblings('.help-block').remove();
+        });
+
         $.post($(this).attr('action'), $(this).serialize(), function(response)
         {
             try {
