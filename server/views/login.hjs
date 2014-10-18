@@ -1,27 +1,29 @@
 {{> head}}
     {{> header}}
 
-    <div class="form">
-        <form method="post" action="/login" class="form-horizontal" role="form">
-            <div class="form-group">
-                <label class="col-sm-3 control-label">Username</label>
-                <div class="col-sm-9">
-                    <input name="username" class="form-control">
+    <div class="form-wrap">
+        <div class="form">
+            <form method="post" action="/login" class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Username</label>
+                    <div class="col-sm-9">
+                        <input name="username" class="form-control">
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label class="col-sm-3 control-label">Password</label>
-                <div class="col-sm-9">
-                    <input name="password" type="password" class="form-control">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Password</label>
+                    <div class="col-sm-9">
+                        <input name="password" type="password" class="form-control">
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <div class="col-sm-offset-3 col-sm-9">
-                    <input type="submit" value="Login" class="btn btn-primary">
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-9">
+                        <input type="submit" value="Login" class="btn btn-primary">
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 {{> foot}}

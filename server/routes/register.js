@@ -118,7 +118,7 @@ module.exports = function(required)
             // If an error has been set
             if(Object.keys(errors).length)
             {
-                res.send(JSON.stringify(errors));
+                res.send(JSON.stringify({'status': 'error', 'errors': errors}));
                 res.end();
             }
             else
@@ -205,7 +205,7 @@ module.exports = function(required)
                     }
                     else
                     {
-                        res.send(JSON.stringify({'unknown': 'An error occured while generating your password'}));
+                        res.send(JSON.stringify({'status': 'error', 'errors': {'unknown': 'An error occured while generating your password'}}));
                         res.end();
                     }
                 });
