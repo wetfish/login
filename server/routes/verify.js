@@ -9,12 +9,10 @@ var client, model, app;
 // Helper functions
 function verify_token(req, callback)
 {
-    var message;
-
     // Is there a token?
     if(!req.query.token)
     {
-        callback("Error: No token specified");
+        callback({'status': 'error', 'message': "No token specified"});
     }
     else
     {
@@ -23,7 +21,7 @@ function verify_token(req, callback)
         {
             if(!user_id)
             {
-                callback("Error: Invalid token specified. Your account may have expired or is already validated.");
+                callback({'status': 'error', 'message': "Invalid token specified. Your account may have expired or is already validated."});
             }
             else
             {
@@ -31,7 +29,7 @@ function verify_token(req, callback)
                 {
                     if(!user_data)
                     {
-                        callback("Error: User not found. Your token was valid, but no user information was found. How strange!");
+                        callback({'status': 'error', 'message': "User not found. Your token was valid, but no user information was found. How strange!"});
                     }
                     else
                     {
@@ -50,11 +48,11 @@ function verify_token(req, callback)
                         {
                             if(error)
                             {
-                                callback("Error: User found, but an error occured while saving your account information. How strange!");
+                                callback({'status': 'error', 'message': "User found, but an error occured while saving your account information. How strange!"});
                             }
                             else
                             {
-                                callback("Thank you! Your account is now verified. You may now <a href='/login'>log in</a>.");
+                                callback({'status': 'success', 'message': "Your account is now verified. You may now log in."});
                             }
                         });
                     }
@@ -62,7 +60,6 @@ function verify_token(req, callback)
             }
         });
     }
-
 }
 
 
@@ -75,8 +72,19 @@ module.exports = function(required)
 
     app.get('/verify', function(req, res)
     {
-        verify_token(req, function(message)
+        verify_token(req, function(response)
         {
+            var message;
+            
+            if(response.status == 'success')
+            {
+                message = '<div class="alert alert-success" role="alert"><strong>Success!</strong> '+response.message+'</div>';
+            }
+            else
+            {
+                message = '<div class="alert alert-danger" role="alert"><strong>Error:</strong> '+response.message+'</div>';
+            }
+            
             console.log("GET: /verify");
             res.render('verify', {
                 title: 'Email Verification',
