@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>{{title}}</title>
+        <title>{{title}} - Wetfish Profiles</title>
 
         <!-- jQuery -->
         <script src="/vendor/jquery-1.11.1.min.js"></script>

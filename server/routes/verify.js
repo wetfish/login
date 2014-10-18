@@ -83,6 +83,7 @@ module.exports = function(required)
                 message: message,
                 partials: {
                     head: 'partials/head',
+                    header: 'partials/header',
                     foot: 'partials/foot'
                 }
             });

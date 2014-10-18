@@ -4,7 +4,7 @@ module.exports = function(app)
     {
         console.log("GET: /");
         res.render('index', {
-            title: 'Hello!',
+            title: 'About',
             partials: {
                 head: 'partials/head',
                 header: 'partials/header',

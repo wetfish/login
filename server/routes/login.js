@@ -7,6 +7,7 @@ module.exports = function(app)
             title: 'Login',
             partials: {
                 head: 'partials/head',
+                header: 'partials/header',
                 foot: 'partials/foot'
             }
         });

@@ -1,3 +1,4 @@
 {{> head}}
-    {{{message}}}
+    {{> header}}
+    {{message}}
 {{> foot}}

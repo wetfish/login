@@ -67,6 +67,7 @@ module.exports = function(required)
             title: 'Register',
             partials: {
                 head: 'partials/head',
+                header: 'partials/header',
                 foot: 'partials/foot'
             }
         });
