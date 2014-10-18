@@ -8,7 +8,6 @@ module.exports = function(app)
         console.log("GET: /login");
         res.render('login', {
             title: 'Login',
-            count: req.session.count,
             partials: {
                 head: 'partials/head',
                 header: 'partials/header',

@@ -172,6 +172,12 @@ module.exports = function(required)
                                             from    : 'noreply@wetfish.net',
                                             fromname: 'wetfish.net',
                                             subject : 'Account Activation Code',
+                                            
+                                            text    : 'Your wetfish account ('+username+') has been successfully registered!\n\n' +
+                                                      'Please paste the following link into your browser address bar to activate your account.\n\n' +
+                                                      'https://login.wetfish.net/verify?token='+token+'\n\n' +
+                                                      'If you did not create this account, simply ignore this message and the account will be automatically deleted in 24 hours.',
+
                                             html    : '<p>Your wetfish account (<strong>'+username+'</strong>) has been successfully registered!</p>' +
                                                       '<p>Please click the following link to activate your account.</p>' +
                                                       '<a href="https://login.wetfish.net/verify?token='+token+'" target="_blank">https://login.wetfish.net/verify?token='+token+'</a>' +

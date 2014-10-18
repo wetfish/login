@@ -1,8 +1,6 @@
 {{> head}}
     {{> header}}
 
-    {{count}}
-
     <div class="form-wrap">
         <div class="form">
             <form method="post" action="/login" class="form-horizontal" role="form">
