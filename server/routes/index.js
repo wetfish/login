@@ -7,6 +7,7 @@ module.exports = function(app)
             title: 'Hello!',
             partials: {
                 head: 'partials/head',
+                header: 'partials/header',
                 foot: 'partials/foot'
             }
         });

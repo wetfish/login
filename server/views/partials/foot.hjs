@@ -1,3 +1,7 @@
-        </div>
+
+            <div class="footer">
+                <div class="copyleft">&copy;</div> wetfish.net &mdash; Source available via <a href="https://github.com/wetfish/login">GitHub</a>.
+            </div>
+        </div> <!-- /container -->
     </body>
 </html>

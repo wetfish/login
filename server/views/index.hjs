@@ -1,8 +1,38 @@
 {{> head}}
-    <h1>Hello!</h1>
+    {{> header}}
 
-    <p>Welcome to wetfish's account management system.</p>
+    <div class="jumbotron">
+        <h1>It's finally here...</h1>
+        <p class="lead">
+            After years of waiting, Wetfish is open for registration!<br>
+            A single sign-on service for all of our official and community created projects&mdash;even IRC!
+        </p>
+        <p><a class="btn btn-lg btn-success" href="/register" role="button">Sign up today</a></p>
+    </div>
 
-    <a href="/login">Login</a> | 
-    <a href="/register">Register</a>
+    <div class="row marketing">
+        <div class="col-lg-6">
+            <div class="blurb">
+                <h4>Profiles</h4>
+                <p>Create a profile to save information about yourself. Share your projects, social media accounts, even public keys!</p>
+            </div>
+
+            <div class="blurb">
+                <h4>Privacy</h4>
+                <p>When logging into an app, you get to choose exactly what gets shared. Share as much or as little as you want.</p>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="blurb">
+                <h4>Developer Friendly</h4>
+                <p>Anyone can integrate Wetfish Profiles into their own projects. Just sign up to get your own API credentials.</p>
+            </div>
+
+            <div class="blurb">
+                <h4>Fully Documented</h4>
+                <p>Check out our <a href="https://github.com/wetfish/login">GitHub page</a> for documentation and examples to get started.</p>
+            </div>
+        </div>
+    </div>
 {{> foot}}
