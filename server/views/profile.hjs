@@ -1,9 +1,171 @@
 {{> head}}
     {{> header}}
 
+    <div class="alert alert-success" role="alert">
+        <strong>Don't panic!</strong>
+        You can fill out as much or as little as you want.<br>
+    </div>
+        
     <div class="form-wrap">
         <div class="form">
-            hello I am a form
+            <form method="post" action="/profile" class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Username</label>
+                    <div class="col-sm-9">
+                        <input name="username" class="form-control" value="{{user_data.username}}" disabled>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Email</label>
+                    <div class="col-sm-9">
+                        <input name="email" class="form-control"  value="{{user_data.email}}" disabled>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Password</label>
+                    <div class="col-sm-9">
+                        <input name="password" type="password" class="form-control" value="not really your password" disabled>
+                    </div>
+                </div>
+
+                <div class="col-sm-offset-3">
+                    <h2>Internet &amp; Social Media <small class="text-right"><span class="glyphicon glyphicon-cloud"></span></small></h2>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Website</label>
+                    <div class="col-sm-9">
+                        <input name="website" class="form-control"  value="{{user_data.website}}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Twitter</label>
+                    <div class="col-sm-9">
+                        <input name="twitter" class="form-control"  value="{{user_data.twitter}}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Facebook</label>
+                    <div class="col-sm-9">
+                        <input name="facebook" class="form-control"  value="{{user_data.facebook}}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">SoundCloud</label>
+                    <div class="col-sm-9">
+                        <input name="soundcloud" class="form-control"  value="{{user_data.phone}}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Bandcamp</label>
+                    <div class="col-sm-9">
+                        <input name="bandcamp" class="form-control"  value="{{user_data.bandcamp}}">
+                    </div>
+                </div>
+
+                <div class="col-sm-offset-3">
+                    <h2>Personal Information <small class="text-right"><span class="glyphicon glyphicon-user"></span></small></h2>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">About Me</label>
+                    <div class="col-sm-9">
+                        <textarea name="about" class="form-control"  value="{{user_data.about}}"></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Real Name</label>
+                    <div class="col-sm-9">
+                        <input name="real_name" class="form-control"  value="{{user_data.real_name}}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Birthday</label>
+                    <div class="col-sm-3">
+                        <select name="birth[year]" class="form-control" value="{{user_data.birth.year}}">
+                            <option value="">Year</option>
+                            <option>2000</option>
+                        </select>                        
+                    </div>
+
+                    <div class="col-sm-3">
+                        <select name="birth[month]" class="form-control" value="{{user_data.birth.month}}">
+                            <option value="">Month</option>
+                            <option>2000</option>
+                        </select>                        
+                    </div>
+
+                    <div class="col-sm-3">
+                        <select name="birth[day]" class="form-control" value="{{user_data.birth.day}}">
+                            <option value="">Day</option>
+                            <option>2000</option>
+                        </select>                        
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Phone Number</label>
+                    <div class="col-sm-9">
+                        <input name="phone" class="form-control"  value="{{user_data.phone}}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Address</label>
+                    <div class="col-sm-9">
+                        <input name="address" class="form-control" placeholder="Address" value="{{user_data.address}}">
+                    </div>
+<!-- city state zip -->
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-3">
+                        <div class="col-sm-4"> 
+                            <input name="phone" class="form-control" placeholder="City" value="{{user_data.phone}}">
+                        </div>
+
+                        <div class="col-sm-4"> 
+                            <input name="phone" class="form-control" placeholder="State" value="{{user_data.phone}}">
+                        </div>
+
+                        <div class="col-sm-4"> 
+                            <input name="phone" class="form-control" placeholder="Postal Code" value="{{user_data.phone}}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-offset-3">
+                    <h2>Nerdy Stuff <small class="text-right"><span class="glyphicon glyphicon-barcode"></span></small></h2>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">GitHub Profile</label>
+                    <div class="col-sm-9">
+                        <input name="github" class="form-control"  value="{{user_data.github}}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Public Key</label>
+                    <div class="col-sm-9">
+                        <textarea name="pubkey" class="form-control">{{user_data.phone}}</textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-9">
+                        <input type="submit" value="Save Profile" class="btn btn-primary">
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 {{> foot}}

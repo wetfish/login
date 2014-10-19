@@ -50,6 +50,7 @@ module.exports = function(required)
         res.render('profile', {
             title: 'Profile',
             user: user,
+            user_data: req.session.user_data,
             partials: {
                 head: 'partials/head',
                 header: 'partials/header',
