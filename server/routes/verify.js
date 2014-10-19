@@ -78,7 +78,7 @@ module.exports = function(required)
             
             if(response.status == 'success')
             {
-                message = '<div class="alert alert-success" role="alert"><strong>Success!</strong> '+response.message+'</div>';
+                message = '<div class="alert alert-success redirect" role="alert" redirect-url="/" redirect-timeout="2"><strong>Success!</strong> '+response.message+'</div>';
             }
             else
             {

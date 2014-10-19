@@ -79,7 +79,7 @@ function verify_login(req, callback)
                                         req.session.user_id = user_id;
                                         req.session.user_data = user_data;
                                         
-                                        callback({'status': 'success', 'message': "You are now logged in."});
+                                        callback({'status': 'success', 'message': "You are now logged in.", 'redirect': {'url': '/', 'timeout': 2}});
                                     }
                                 });
                             }

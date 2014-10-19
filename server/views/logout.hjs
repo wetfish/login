@@ -1,4 +1,4 @@
 {{> head}}
     {{> header}}
-    <div class="alert alert-success" role="alert"><strong>Success!</strong> You are now logged out.</div>
+    <div class="alert alert-success redirect" role="alert" redirect-url="/" redirect-timeout="2"><strong>Success!</strong> You are now logged out.</div>
 {{> foot}}

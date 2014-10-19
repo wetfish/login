@@ -1,5 +1,20 @@
+function redirect(url, timeout)
+{
+    if($('.redirect').length)
+    {
+        var url = $('.redirect').attr('redirect-url');
+        var timeout = parseInt($('.redirect').attr('redirect-timeout'));
+    }
+
+    if(url)
+        setTimeout(function() { window.location = url; }, timeout * 1000);
+}
+
 $(document).ready(function()
 {
+    // Check for any redirects on page load
+    redirect();
+    
     $('.header .nav li').each(function()
     {
         if($(this).find('a').attr('href') == window.location.pathname)
@@ -80,6 +95,11 @@ $(document).ready(function()
             else
             {
                 console.log(response);
+            }
+
+            if(response.redirect)
+            {
+                redirect(response.redirect.url, response.redirect.timeout);
             }
         });
     });
