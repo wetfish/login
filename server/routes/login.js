@@ -34,7 +34,7 @@ function verify_login(req, callback)
     else
     {
         // Does this user exist?
-        client[2].get(req.body.username, function(error, user_id)
+        client[2].get(req.body.username.toLowerCase(), function(error, user_id)
         {
             if(!user_id)
             {

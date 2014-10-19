@@ -120,6 +120,9 @@ module.exports = function(required)
             if(validator.isEmail(username))
                 errors.username = "Your username cannot be an email";
 
+            if(username.length > 32)
+                errors.username = "Your username is too long";
+
             if(!validator.isEmail(email))
                 errors.email = "Your email is invalid";
                 
@@ -170,8 +173,8 @@ module.exports = function(required)
                                 // Save member information in redis
                                 async.parallel([
                                     model.async(client[1], client[1].set, [user_id, JSON.stringify(user_data), 'ex', timeout]),
-                                    model.async(client[2], client[2].set, [username, user_id, 'ex', timeout]),
-                                    model.async(client[3], client[3].set, [email, user_id, 'ex', timeout]),
+                                    model.async(client[2], client[2].set, [username.toLowerCase(), user_id, 'ex', timeout]),
+                                    model.async(client[3], client[3].set, [email.toLowerCase(), user_id, 'ex', timeout]),
                                     model.async(client[4], client[4].set, [token, user_id, 'ex', timeout]),
                                 ],
 
