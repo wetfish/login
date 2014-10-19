@@ -85,6 +85,10 @@ body {
 
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
+    .form .address {
+        margin-bottom: 15px;
+    }
+
     /* Remove the padding we set earlier */
     .header,
     .marketing,

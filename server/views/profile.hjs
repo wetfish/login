@@ -58,7 +58,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">SoundCloud</label>
                     <div class="col-sm-9">
-                        <input name="soundcloud" class="form-control"  value="{{user_data.phone}}">
+                        <input name="soundcloud" class="form-control"  value="{{user_data.soundcloud}}">
                     </div>
                 </div>
 
@@ -81,9 +81,9 @@
                 </div>
                 
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">Real Name</label>
+                    <label class="col-sm-3 control-label">Full Name</label>
                     <div class="col-sm-9">
-                        <input name="real_name" class="form-control"  value="{{user_data.real_name}}">
+                        <input name="full_name" class="form-control"  value="{{user_data.full_name}}">
                     </div>
                 </div>
 
@@ -92,22 +92,31 @@
                     <div class="col-sm-3">
                         <select name="birth[year]" class="form-control" value="{{user_data.birth.year}}">
                             <option value="">Year</option>
-                            <option>2000</option>
-                        </select>                        
+
+                            {{#years}}
+                                <option value="{{value}}">{{text}}</option>
+                            {{/years}}
+                        </select>
                     </div>
 
                     <div class="col-sm-3">
                         <select name="birth[month]" class="form-control" value="{{user_data.birth.month}}">
                             <option value="">Month</option>
-                            <option>2000</option>
-                        </select>                        
+
+                            {{#months}}
+                                <option value="{{value}}">{{text}}</option>
+                            {{/months}}
+                        </select>
                     </div>
 
                     <div class="col-sm-3">
                         <select name="birth[day]" class="form-control" value="{{user_data.birth.day}}">
                             <option value="">Day</option>
-                            <option>2000</option>
-                        </select>                        
+
+                            {{#days}}
+                                <option value="{{value}}">{{text}}</option>
+                            {{/days}}
+                        </select>
                     </div>
                 </div>
 
@@ -120,24 +129,21 @@
 
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Address</label>
-                    <div class="col-sm-9">
-                        <input name="address" class="form-control" placeholder="Address" value="{{user_data.address}}">
+                    <div class="col-sm-9 address">
+                        <input name="address[address]" class="form-control" placeholder="Address" value="{{user_data.address.address}}">
                     </div>
-<!-- city state zip -->
-                </div>
 
-                <div class="form-group">
                     <div class="col-sm-offset-3">
                         <div class="col-sm-4"> 
-                            <input name="phone" class="form-control" placeholder="City" value="{{user_data.phone}}">
+                            <input name="address[city]" class="form-control" placeholder="City" value="{{user_data.address.city}}">
                         </div>
 
                         <div class="col-sm-4"> 
-                            <input name="phone" class="form-control" placeholder="State" value="{{user_data.phone}}">
+                            <input name="address[state]" class="form-control" placeholder="State" value="{{user_data.address.state}}">
                         </div>
 
                         <div class="col-sm-4"> 
-                            <input name="phone" class="form-control" placeholder="Postal Code" value="{{user_data.phone}}">
+                            <input name="address[zip]" class="form-control" placeholder="Postal Code" value="{{user_data.address.zip}}">
                         </div>
                     </div>
                 </div>
@@ -156,7 +162,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Public Key</label>
                     <div class="col-sm-9">
-                        <textarea name="pubkey" class="form-control">{{user_data.phone}}</textarea>
+                        <textarea name="pubkey" class="form-control">{{user_data.pubkey}}</textarea>
                     </div>
                 </div>
 

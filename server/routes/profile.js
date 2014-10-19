@@ -6,6 +6,47 @@ var validator = require('validator');
 var client, model, app;
 
 
+// Helper functions
+function get_years()
+{
+    // Get current year
+    var year = new Date().getFullYear();
+    var years = [];
+
+    for(var i = year, l = year - 150; i >= l; i--)
+    {
+        years.push({'value': i, 'text': i});
+    }
+
+    return years;
+}
+
+function get_months()
+{
+    var month_list = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'November', 'December'];
+    var months = [];
+
+    for(var i = 0, l = month_list.length; i < l; i++)
+    {
+        months.push({'value': i + 1, 'text': month_list[i]});
+    }
+
+    return months;
+}
+
+function get_days()
+{
+    var days = [];
+
+    for(var i = 1; i <= 31; i++)
+    {
+        days.push({'value': i, 'text': i});
+    }
+
+    return days;
+}
+
+
 module.exports = function(required)
 {
     client = required.client;
@@ -45,12 +86,15 @@ module.exports = function(required)
         {
             user = req.session.user_data.username;
         }
-        
+
         console.log("GET: /profile");
         res.render('profile', {
             title: 'Profile',
             user: user,
             user_data: req.session.user_data,
+            years: get_years(),
+            months: get_months(),
+            days: get_days(),
             partials: {
                 head: 'partials/head',
                 header: 'partials/header',
