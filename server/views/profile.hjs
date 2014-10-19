@@ -1,0 +1,9 @@
+{{> head}}
+    {{> header}}
+
+    <div class="form-wrap">
+        <div class="form">
+            hello I am a form
+        </div>
+    </div>
+{{> foot}}

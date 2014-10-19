@@ -31,7 +31,9 @@ model.connect(function()
     require('./routes/register.js')({app: app, client: client, model: model, sendgrid: sendgrid});
     require('./routes/verify.js')({app: app, client: client, model: model});
     require('./routes/login.js')({app: app, client: client, model: model});
+    require('./routes/profile.js')({app: app, client: client, model: model});
     require('./routes/logout.js')({app: app});
+    require('./routes/api/list.js')({app: app, client: client, model: model});
     require('./routes/api/create.js')(app);
     require('./routes/api/verify.js')(app);
 
