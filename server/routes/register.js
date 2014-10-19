@@ -62,6 +62,13 @@ module.exports = function(required)
     
     app.get('/register', function(req, res)
     {
+        // Users shouldn't be here if they're already logged in
+        if(typeof req.session.user_data != "undefined")
+        {
+            res.redirect('/');
+            return;
+        }
+        
         console.log("GET: /register");
         res.render('register', {
             title: 'Register',
@@ -77,6 +84,13 @@ module.exports = function(required)
     // TODO: Normalize error output
     app.post('/register', function(req, res)
     {
+        // Users shouldn't be here if they're already logged in
+        if(typeof req.session.user_data != "undefined")
+        {
+            res.redirect('/');
+            return;
+        }
+
         console.log("POST: /register");
 
         var username = validator.escape(req.body.username);

@@ -1,15 +1,27 @@
 {{> head}}
     {{> header}}
 
-    <div class="jumbotron">
-        <h1>It's finally here...</h1>
-        <p class="lead">
-            After years of waiting, Wetfish is open for registration!<br>
-            A single sign-on service for all of our official and community created projects&mdash;even IRC!
-        </p>
-        <p><a class="btn btn-lg btn-success" href="/register" role="button">Sign up today</a></p>
-    </div>
+    {{#user}}
+        <div class="jumbotron">
+            <h1>Welcome!</h1>
+            <p class="lead">
+                 Now you can edit your profile, manage which apps have access to your information, and integrate Wetfish Profiles into your own projects.
+            </p>
+            <p><a class="btn btn-lg btn-success" href="/profile" role="button">Edit your profile</a></p>
+        </div>
+    {{/user}}
 
+    {{^user}}
+        <div class="jumbotron">
+            <h1>It's finally here...</h1>
+            <p class="lead">
+                After years of waiting, Wetfish is open for registration!<br>
+                A single sign-on service for all of our official and community created projects&mdash;even IRC!
+            </p>
+            <p><a class="btn btn-lg btn-success" href="/register" role="button">Sign up today</a></p>
+        </div>
+    {{/user}}
+    
     <div class="row marketing">
         <div class="col-lg-6">
             <div class="blurb">

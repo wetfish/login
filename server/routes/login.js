@@ -99,8 +99,12 @@ module.exports = function(required)
     
     app.get('/login', function(req, res)
     {
-        if(typeof req.session.count == "undefined") req.session.count = 0
-        req.session.count++;
+        // Users shouldn't be here if they're already logged in
+        if(typeof req.session.user_data != "undefined")
+        {
+            res.redirect('/');
+            return;
+        }
         
         console.log("GET: /login");
         res.render('login', {
@@ -115,6 +119,13 @@ module.exports = function(required)
 
     app.post('/login', function(req, res)
     {
+        // Users shouldn't be here if they're already logged in
+        if(typeof req.session.user_data != "undefined")
+        {
+            res.redirect('/');
+            return;
+        }
+
         console.log("POST: /login");
 
         verify_login(req, function(response)
