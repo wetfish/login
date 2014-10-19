@@ -33,9 +33,9 @@ model.connect(function()
     require('./routes/login.js')({app: app, client: client, model: model});
     require('./routes/profile.js')({app: app, client: client, model: model});
     require('./routes/logout.js')({app: app});
-    require('./routes/api/list.js')({app: app, client: client, model: model});
-    require('./routes/api/create.js')(app);
-    require('./routes/api/verify.js')(app);
+    require('./routes/apps/list.js')({app: app, client: client, model: model});
+    require('./routes/apps/create.js')(app);
+    require('./routes/apps/verify.js')(app);
 
     app.use(express.static(path.join(__dirname, 'static')));
 

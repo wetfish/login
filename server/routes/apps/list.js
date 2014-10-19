@@ -12,7 +12,7 @@ module.exports = function(required)
     model = required.model;
     app = required.app;
     
-    app.get('/api', function(req, res)
+    app.get('/apps', function(req, res)
     {
         var user;
 
@@ -27,9 +27,9 @@ module.exports = function(required)
             user = req.session.user_data.username;
         }
         
-        console.log("GET: /api");
-        res.render('api/list', {
-            title: 'API Credentials',
+        console.log("GET: /apps");
+        res.render('apps/list', {
+            title: 'Your Apps',
             user: user,
             partials: {
                 head: 'partials/head',

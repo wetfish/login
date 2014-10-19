@@ -3,7 +3,7 @@
         <ul class="nav nav-pills pull-right" role="tablist">
             <li role="presentation"><a href="/">Home</a></li>
             <li role="presentation"><a href="/profile">Profile</a></li>
-            <li role="presentation"><a href="/api">API</a></li>
+            <li role="presentation"><a href="/apps">Apps</a></li>
             <li role="presentation"><a href="/logout">Logout</a></li>
         </ul>
         <h3 class="text-muted">{{user}}</h3>
