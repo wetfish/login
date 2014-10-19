@@ -12,9 +12,11 @@ var model = require('./model')({client: client});
 var config = require('./config');
 var sendgrid = require('sendgrid')(config.sendgrid.username, config.sendgrid.password);
 
+
 // Connect to redis
 model.connect(function()
 {
+    // Use the existing connection for session data
     app.use(session({
         store: new RedisStore({client: client[0]}),
         secret: config.session.secret
@@ -27,15 +29,18 @@ model.connect(function()
     app.set('views', path.join(__dirname, 'views'));
     app.set('view engine', 'hjs');
 
-    require('./routes/index.js')(app);
-    require('./routes/register.js')({app: app, client: client, model: model, sendgrid: sendgrid});
-    require('./routes/verify.js')({app: app, client: client, model: model});
-    require('./routes/login.js')({app: app, client: client, model: model});
-    require('./routes/profile.js')({app: app, client: client, model: model});
-    require('./routes/logout.js')({app: app});
-    require('./routes/apps/list.js')({app: app, client: client, model: model});
-    require('./routes/apps/create.js')(app);
-    require('./routes/apps/verify.js')(app);
+    // Required variables routes need access to
+    var required = {app: app, client: client, model: model, sendgrid: sendgrid};
+
+    require('./routes/index.js')(required);
+    require('./routes/register.js')(required);
+    require('./routes/verify.js')(required);
+    require('./routes/login.js')(required);
+    require('./routes/profile.js')(required);
+    require('./routes/logout.js')(required);
+    require('./routes/apps/list.js')(required);
+    require('./routes/apps/create.js')(required);
+    require('./routes/apps/verify.js')(required);
 
     app.use(express.static(path.join(__dirname, 'static')));
 

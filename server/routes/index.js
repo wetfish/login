@@ -1,5 +1,10 @@
-module.exports = function(app)
+// Variables passed from server.js
+var app;
+
+module.exports = function(required)
 {
+    app = required.app;
+    
     app.get('/', function(req, res)
     {
         var user;
