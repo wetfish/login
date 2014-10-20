@@ -3,7 +3,9 @@
 
     <div class="form-wrap">
         <div class="form">
-            hello I am a list
+            <p>You have no apps</p>
+
+            <a href="/apps/create" class="btn btn-primary">Create An App</a>
         </div>
     </div>
 {{> foot}}

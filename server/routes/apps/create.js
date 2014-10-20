@@ -37,4 +37,21 @@ module.exports = function(required)
             }
         });
     });
+
+    app.post('/apps/create', function(req, res)
+    {
+        // TODO!
+        // Make some bogus terms of service
+
+        // Verify user aggreed to the terms
+        // Verify app name and description is set
+        // Verify app URL is valid
+        // Verify callback is a valid
+        
+        // Generate unique ID for the app
+        // Save app information
+        // Save app meta-info in user data
+        
+        res.end();
+    });
 }
