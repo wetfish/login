@@ -24,7 +24,7 @@ model.connect(function()
     
     // Do everything else!
     app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({ extended: false }));
+    app.use(bodyParser.urlencoded({ extended: true }));
 
     app.set('views', path.join(__dirname, 'views'));
     app.set('view engine', 'hjs');

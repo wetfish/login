@@ -46,6 +46,129 @@ function get_days()
     return days;
 }
 
+function check_url(url)
+{
+    // Trim whitespace
+    url = validator.trim(url);
+    
+    if(validator.isURL(url))
+    {
+        if(url.indexOf('http') == 0)
+            return url;
+
+        return 'http://' + url;
+    }
+
+    return false;
+}
+
+function check_social(data)
+{
+    var valid = [];
+    var errors = [];
+    
+    for(var i = 0, l = data.length; i < l; i++)
+    {
+        var key = data[i][0];
+        var value = data[i][1];
+
+        // Skip empty values
+        if(typeof value == "undefined" || value.toString().length == 0)
+            continue;
+
+        var url = check_url(value);
+
+        if(url)
+            valid.push([key, url]);
+        else
+            errors.push([key, 'This field must be a URL']);
+    }
+
+    return {valid: valid, errors: errors};
+}
+
+function check_personal(data)
+{
+    var valid = [];
+    var errors = [];
+
+    for(var i = 0, l = data.length; i < l; i++)
+    {
+        var key = data[i][0];
+        var value = data[i][1];
+
+        // Skip empty values
+        if(typeof value == "undefined" || value.toString().length == 0)
+            continue;
+
+        // Handlers for special fields
+        if(key == "birth")
+        {
+            // Make sure only numbers are entered for birthdays
+            var birth =
+            {
+                'year': parseInt(value.year),
+                'month': parseInt(value.month),
+                'day': parseInt(value.day)
+            };
+
+            valid.push([key, birth]);
+        }
+        else if(key == "address")
+        {
+            // Make sure a clever user didn't add extra address fields
+            var address =
+            {
+                address: value.address,
+                city: value.city,
+                state: value.state,
+                zip: value.zip
+            };
+
+            valid.push([key, address]);
+        }
+        else
+        {
+            valid.push([key, value]);
+        }
+    }
+
+    return {valid: valid, errors: errors};
+}
+
+function check_nerdy(data)
+{
+    var valid = [];
+    var errors = [];
+
+    for(var i = 0, l = data.length; i < l; i++)
+    {
+        var key = data[i][0];
+        var value = data[i][1];
+
+        // Skip empty values
+        if(typeof value == "undefined" || value.toString().length == 0)
+            continue;
+
+        if(key == "github")
+        {
+            var url = check_url(value);
+
+            if(url)
+                valid.push([key, url]);
+            else
+                errors.push([key, 'This field must be a URL']);
+        }
+
+        // TODO: Check to ensure pubkeys are in PEM format
+        else if(key == "pubkey")
+        {
+            valid.push([key, value]);
+        }
+    }
+
+    return {valid: valid, errors: errors};
+}
 
 module.exports = function(required)
 {
@@ -101,5 +224,91 @@ module.exports = function(required)
                 foot: 'partials/foot'
             }
         });
+    });
+
+    app.post('/profile', function(req, res)
+    {
+        // Users shouldn't be here if they're not logged in
+        if(typeof req.session.user_data == "undefined")
+        {
+            res.redirect('/');
+            return;
+        }
+
+        console.log("POST: /profile");        
+        var user_data = JSON.parse(JSON.stringify(req.session.user_data));
+        var errors = {};
+        var error = false;
+
+        var social = check_social(
+        [
+            ['website', req.body.website],
+            ['twitter', req.body.twitter],
+            ['facebook', req.body.facebook],
+            ['soundcloud', req.body.soundcloud],
+            ['bandcamp', req.body.bandcamp]
+        ]);
+
+        var personal = check_personal(
+        [
+            ['about', req.body.about],
+            ['full_name', req.body.full_name],
+            ['birth', req.body.birth],
+            ['phone', req.body.phone],
+            ['address', req.body.address],
+        ]);
+
+        var nerdy = check_nerdy(
+        [
+            ['github', req.body.github],
+            ['pubkey', req.body.pubkey]
+        ]);
+
+        var error_list = social.errors.concat(personal.errors, nerdy.errors);
+        var valid_list = social.valid.concat(personal.valid, nerdy.valid);
+
+        for(var i = 0, l = error_list.length; i < l; i++)
+        {
+            var key = error_list[i][0];
+            var value = error_list[i][1];
+
+            errors[key] = value;
+            error = true;
+        }
+
+        for(var i = 0, l = valid_list.length; i < l; i++)
+        {
+            var key = valid_list[i][0];
+            var value = valid_list[i][1];
+
+            user_data[key] = value;
+        }
+
+        if(error)
+        {
+            res.send(JSON.stringify({'status': 'error', 'errors': errors}));
+            res.end();
+        }
+        else
+        {
+            user_data.profile_saved = new Date().getTime();
+
+            // Save member information in redis
+            client[1].set(req.session.user_id, JSON.stringify(user_data), function(error, response)
+            {
+                if(error)
+                {
+                    res.send(JSON.stringify({'status': 'error', 'message': 'An error occured while saving your account information. Please try again.'}));
+                    res.end();
+                }
+                else
+                {
+                    req.session.user_data = user_data;
+                    
+                    res.send(JSON.stringify({'status': 'success', 'message': 'Profile updated.', 'redirect': {'url': '/profile', 'timeout': 2}}));
+                    res.end();
+                }
+            });
+        }
     });
 }

@@ -1,12 +1,14 @@
 {{> head}}
     {{> header}}
-
-    <div class="alert alert-success" role="alert">
-        <strong>Don't panic!</strong>
-        You can fill out as much or as little as you want.<br>
-    </div>
-        
+    
     <div class="form-wrap">
+        {{^user_data.profile_saved}}
+            <div class="alert alert-success" role="alert">
+                <strong>Don't panic!</strong>
+                You can fill out as much or as little as you want.<br>
+            </div>
+        {{/user_data.profile_saved}}
+
         <div class="form">
             <form method="post" action="/profile" class="form-horizontal" role="form">
                 <div class="form-group">
@@ -76,7 +78,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">About Me</label>
                     <div class="col-sm-9">
-                        <textarea name="about" class="form-control"  value="{{user_data.about}}"></textarea>
+                        <textarea name="about" class="form-control">{{user_data.about}}</textarea>
                     </div>
                 </div>
                 
