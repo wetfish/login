@@ -14,11 +14,24 @@ $(document).ready(function()
 {
     // Check for any redirects on page load
     redirect();
-    
+
+    // Add active class to navigation links for the current page
     $('.header .nav li').each(function()
     {
         if($(this).find('a').attr('href') == window.location.pathname)
             $(this).addClass('active');
+    });
+
+    // Automatically select dropdown values on page load
+    $('select').each(function()
+    {
+        var value = $(this).attr('value')
+        
+        if(value)
+        {
+            $(this).find('option').prop('selected', false);
+            $(this).find('option[value="'+value+'"]').prop('selected', true);
+        }
     });
 
     // Use AJAX to submit all forms
