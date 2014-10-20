@@ -1,3 +1,8 @@
+// TODO
+// Pretty much this entire file can be removed
+// Move async to a helper module instead?
+
+
 // Required modules
 var async = require('async');
 var redis = require('redis');

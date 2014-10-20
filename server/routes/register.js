@@ -8,6 +8,8 @@ var crypto = require('crypto');
 var client, model, app, sendgrid;
 
 
+// TODO: Replace these functions with calls to MySQL, but also check redis to make sure two people can't have the same information while pending
+
 // Helper functions
 function check_username(username, callback)
 {
@@ -33,6 +35,7 @@ function check_existing(username, email, callback)
     });
 }
 
+// TODO: Replace this with a MySQL call 
 function generate_id(database, callback)
 {
     var salt = crypto.randomBytes(32).toString('base64');

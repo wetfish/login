@@ -13,6 +13,18 @@ var config = require('./config');
 var sendgrid = require('sendgrid')(config.sendgrid.username, config.sendgrid.password);
 
 
+// TODO: Replace model.connect with a single call to create a redis client
+// TODO: Create database MySQL database schemas
+// TODO: Write tool to convert information stored in redis into MySQL
+
+// TODO (Eventually): Create custom middleware which checks to see if a user is logged in, if so, get the most recent version of their profile from MySQL
+// TODO (Eventually): Store the last time their profile was edited in redis, check against that instead of just getting it every time (expire after some amount of time)
+
+
+// Wait, what actually needs to be relational?
+// Which users belong to an app and which apps belong to a user
+// So maybe I should just use MySQL for that information?
+
 // Connect to redis
 model.connect(function()
 {
