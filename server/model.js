@@ -1,19 +1,30 @@
-// TODO
-// Pretty much this entire file can be removed
-// Move async to a helper module instead?
-
-
 // Required modules
 var async = require('async');
 var redis = require('redis');
-
-
-// Variables passed from server.js
-var client;
-
+var mysql = require('mysql');
 
 // Redis connection model
-var model = {
+var model =
+{
+    // Database connection variables
+    redis: false,
+    mysql: false,
+
+    // Function to connect to our databases
+    connect: function(config)
+    {
+        model.redis = redis.createClient(6301);
+        model.mysql = mysql.createConnection(
+        {
+            host     : 'localhost',
+            user     : config.mysql.username,
+            password : config.mysql.password,
+            database : config.mysql.database
+        });
+
+        model.mysql.connect();
+    },
+    
     // Crazy function for generating functions to pass callbacks to async
     async: function(scope, func, args)
     {
@@ -35,35 +46,7 @@ var model = {
             args.push(function(error, response) { callback(error, response); });
             func.apply(scope, args);
         }
-    },
-    
-    connect: function(callback)
-    {
-        // Create connections for each of the redis databases we use
-        // 0: Express session store
-        // 1: Member account data
-        // 2: Username -> Member lookup
-        // 3: Email -> Member lookup
-        // 4: Email token -> Member lookup
-
-        var select = [];
-
-        for(i = 0; i < 5; i++)
-        {
-            client[i] = redis.createClient(6301);
-            select[i] = model.async(client[i], client[i].select, [i]);
-        }
-        
-        // Select databases for each for our connections
-        async.parallel(select, function(error, message)
-        {
-            callback(error, message);
-        });
-    }
+    }    
 };
 
-module.exports = function(required)
-{
-    client = required.client;
-    return model;
-};
+module.exports = model;

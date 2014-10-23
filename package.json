@@ -13,7 +13,8 @@
     "bcrypt": "*",
     "sendgrid": "*",
     "express-session": "*",
-    "connect-redis": "*"
+    "connect-redis": "*",
+    "mysql": "*"
   },
   "license": "GPL"
 }
