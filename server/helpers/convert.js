@@ -8,8 +8,12 @@ function get_all_users(callback)
 {
     model.redis.select(1, function(error, response)
     {
+        if(error) console.log(error);
+
         model.redis.keys('*', function(error, response)
         {
+            if(error) console.log(error);
+
             var users = [];
             var user_ids = [];
 
@@ -32,14 +36,37 @@ function get_all_users(callback)
 
 get_all_users(function(error, user_data, user_ids)
 {
+    if(error) console.log(error);
+    var finished = 0;
+    
     for(i = 0, l = user_data.length; i < l; i++)
     {
         var data = JSON.parse(user_data[i]);
         var id = user_ids[i];
-        
-        console.log(id, data.username);
-    }
-    
-    process.exit();
-});
 
+        var username    = data.username;    delete(data.username);
+        var email       = data.email;       delete(data.email);
+        var password    = data.password;    delete(data.password);
+        var token       = data.token;       delete(data.token);
+        var verified    = 0;
+
+        if(data.verified)
+            verified = 1;
+
+        console.log("Converting " + username + "...");
+        model.mysql.query("Insert into `users` values (?, ?, ?, ?, ?, ?, ?)", [id, username, email, password, token, verified, JSON.stringify(data)], function(error, response)
+        {
+            if(error) console.log(error);
+            else
+            {
+                finished++;
+
+                if(finished == user_data.length)
+                {
+                    console.log("Conversion complete!");
+                    process.exit();
+                }
+            }
+        });
+    }
+});
