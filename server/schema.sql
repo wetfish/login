@@ -5,6 +5,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   `user_password` varchar(64) character set utf8 NOT NULL,
   `user_token` varchar(64) character set utf8 NOT NULL,
   `user_verified` tinyint(1) NOT NULL,
+  `user_created` datetime NOT NULL,
+  `user_active` datetime NOT NULL,
   `user_data` text character set utf8 NOT NULL,
   UNIQUE KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
