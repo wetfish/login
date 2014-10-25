@@ -19,7 +19,8 @@ var model =
             host     : 'localhost',
             user     : config.mysql.username,
             password : config.mysql.password,
-            database : config.mysql.database
+            database : config.mysql.database,
+            timezone : 'utc' 
         });
 
         model.mysql.connect();
@@ -46,7 +47,22 @@ var model =
             args.push(function(error, response) { callback(error, response); });
             func.apply(scope, args);
         }
-    }    
+    },
+
+    // Functions for getting and setting user data
+    user:
+    {
+        get: function(select, callback)
+        {
+            model.mysql.query("Select * from `users` where ? limit 1", select, callback);
+        },
+
+        set: function(select, data, callback)
+        {
+            var query = model.mysql.query("Update `users` set ?, `user_active` = now() where ?", [data, select], callback);
+            console.log(query.sql);
+        }
+    }
 };
 
 module.exports = model;

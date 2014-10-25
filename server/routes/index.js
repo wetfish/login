@@ -9,8 +9,8 @@ module.exports = function(required)
     {
         var user;
 
-        if(typeof req.session.user_data != "undefined")
-            user = req.session.user_data.username;
+        if(typeof req.session.user != "undefined")
+            user = req.session.user.name;
         
         console.log("GET: /");
         res.render('index', {
