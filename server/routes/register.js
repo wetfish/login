@@ -8,24 +8,11 @@ var crypto = require('crypto');
 var client, model, app, sendgrid;
 
 
-// TODO: Replace these functions with calls to MySQL, but also check redis to make sure two people can't have the same information while pending
-
-// Helper functions
-function check_username(username, callback)
-{
-    client[2].get(username, callback);
-}
-
-function check_email(email, callback)
-{
-    client[3].get(email, callback);
-}
-
 function check_existing(username, email, callback)
 {
     async.parallel([
-        model.async(null, check_username, [username]),
-        model.async(null, check_email, [email])
+        model.async(null, model.user.get, [{user_name: username}]),
+        model.async(null, model.user.get, [{user_email: email}])
     ],
 
     function(error, response)
@@ -35,23 +22,25 @@ function check_existing(username, email, callback)
     });
 }
 
-// TODO: Replace this with a MySQL call 
-function generate_id(database, callback)
+function generate_id(type, callback)
 {
     var salt = crypto.randomBytes(32).toString('base64');
     var noise = crypto.randomBytes(32).toString('base64');
     var unique_id = crypto.createHmac("sha256", salt).update(noise).digest("hex");
 
-    // Check to make sure the generated ID doesn't already exist in redis
-    client[database].get(unique_id, function(error, response)
-    {
-        // If this user_id isn't taken
-        if(response == null)
-            callback(unique_id);
+    var select = {};
+    select[type] = unique_id;
 
-        // Otherwise try generating again (hahah there was a collision, YEAH RIGHT)
+    // Check to make sure the generated ID doesn't already exist in the database
+    model.user.get(select, function(error, response)
+    {
+        // If this ID is already in use, try generating again (hahah there was a collision, YEAH RIGHT)
+        if(response.length)
+            generate_token(type, callback);
+
+        // Otherwise, pass our generated ID to the callback
         else
-            generate_token(database, callback);
+            callback(unique_id);
     });
 }
 
@@ -66,7 +55,7 @@ module.exports = function(required)
     app.get('/register', function(req, res)
     {
         // Users shouldn't be here if they're already logged in
-        if(typeof req.session.user_data != "undefined")
+        if(typeof req.session.user != "undefined")
         {
             res.redirect('/');
             return;
@@ -88,7 +77,7 @@ module.exports = function(required)
     app.post('/register', function(req, res)
     {
         // Users shouldn't be here if they're already logged in
-        if(typeof req.session.user_data != "undefined")
+        if(typeof req.session.user != "undefined")
         {
             res.redirect('/');
             return;
@@ -114,10 +103,10 @@ module.exports = function(required)
             }
 
             // Check other conditions
-            if(response[0])
+            if(response[0].length)
                 errors.username = "This username is taken";
 
-            if(response[1])
+            if(response[1].length)
                 errors.email = "This email is already in use";
 
             if(validator.isEmail(username))
@@ -155,33 +144,22 @@ module.exports = function(required)
                     if(!error && response)
                     {
                         // Generate email verification token
-                        generate_id(4, function(token)
+                        generate_id('user_token', function(token)
                         {
                             // Generate user ID
-                            generate_id(1, function(user_id)
+                            generate_id('user_id', function(user_id)
                             {
-                                var user_data =
+                                var data =
                                 {
-                                    username: username,
-                                    email: email,
-                                    password: password,
-                                    token: token,
-                                    created: new Date().getTime(),
-                                    verified: false
+                                    user_id: user_id,
+                                    user_name: username,
+                                    user_email: email,
+                                    user_password: password,
+                                    user_token: token,
+                                    user_verified: 0
                                 };
-
-                                // Automatically delete new users after 24 hours
-                                var timeout = 60 * 60 * 24;
-
-                                // Save member information in redis
-                                async.parallel([
-                                    model.async(client[1], client[1].set, [user_id, JSON.stringify(user_data), 'ex', timeout]),
-                                    model.async(client[2], client[2].set, [username.toLowerCase(), user_id, 'ex', timeout]),
-                                    model.async(client[3], client[3].set, [email.toLowerCase(), user_id, 'ex', timeout]),
-                                    model.async(client[4], client[4].set, [token, user_id, 'ex', timeout]),
-                                ],
-
-                                function(error, response)
+                                
+                                model.user.register(data, function(error, response)
                                 {
                                     if(!error)
                                     {
@@ -222,7 +200,7 @@ module.exports = function(required)
                                     else
                                     {
                                         console.error(error);
-                                        res.send(JSON.stringify({'status': 'error', 'errors': {'unknown': 'An error occured while saving your account information'}}));
+                                        res.send(JSON.stringify({'status': 'error', 'errors': {'unknown': 'An error occured while saving your account information. Please try again'}}));
                                         res.end();
                                     }
                                 });
@@ -236,6 +214,6 @@ module.exports = function(required)
                     }
                 });
             }
-        })
+        });
     });
 }
