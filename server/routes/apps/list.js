@@ -14,23 +14,17 @@ module.exports = function(required)
     
     app.get('/apps', function(req, res)
     {
-        var user;
-
         // Users shouldn't be here if they're not logged in
         if(typeof req.session.user == "undefined")
         {
             res.redirect('/');
             return;
         }
-        else
-        {
-            user = req.session.user.name;
-        }
         
         console.log("GET: /apps");
         res.render('apps/list', {
             title: 'Your Apps',
-            user: user,
+            user: req.session.user,
             partials: {
                 head: 'partials/head',
                 header: 'partials/header',

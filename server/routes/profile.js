@@ -178,23 +178,17 @@ module.exports = function(required)
     
     app.get('/profile', function(req, res)
     {
-        var user;
-
         // Users shouldn't be here if they're not logged in
         if(typeof req.session.user == "undefined")
         {
             res.redirect('/');
             return;
         }
-        else
-        {
-            user = req.session.user.name;
-        }
 
         console.log("GET: /profile");
         res.render('profile', {
             title: 'Profile',
-            user: user,
+            user: req.session.user,
             user_data: req.session.user_data,
             years: get_years(),
             months: get_months(),
@@ -210,7 +204,7 @@ module.exports = function(required)
     app.post('/profile', function(req, res)
     {
         // Users shouldn't be here if they're not logged in
-        if(typeof req.session.user_data == "undefined")
+        if(typeof req.session.user == "undefined")
         {
             res.redirect('/');
             return;
@@ -274,8 +268,8 @@ module.exports = function(required)
         {
             user_data.profile_saved = new Date().getTime();
 
-            // Save member information in redis
-            client[1].set(req.session.user_id, JSON.stringify(user_data), function(error, response)
+            // Save member information
+            model.mysql.set({user_id: req.session.user_id}, {user_data: JSON.stringify(user_data)}, function(error, response)
             {
                 if(error)
                 {

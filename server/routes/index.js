@@ -7,15 +7,10 @@ module.exports = function(required)
     
     app.get('/', function(req, res)
     {
-        var user;
-
-        if(typeof req.session.user != "undefined")
-            user = req.session.user.name;
-        
         console.log("GET: /");
         res.render('index', {
             title: 'About',
-            user: user,
+            user: req.session.user,
             partials: {
                 head: 'partials/head',
                 header: 'partials/header',
