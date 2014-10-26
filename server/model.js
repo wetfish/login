@@ -54,7 +54,17 @@ var model =
     {
         get: function(select, callback)
         {
-            model.mysql.query("Select * from `users` where ? limit 1", select, callback);
+            var where = [];
+            var values = [];
+            
+            for(var i = 0, keys = Object.keys(select), l = keys.length; i < l; i++)
+            {
+                where.push(model.mysql.escapeId(keys[i]) + ' = ?');
+                values.push(select[keys[i]]);
+            }
+
+            where = where.join(' and ');            
+            model.mysql.query("Select * from `users` where "+where+" limit 1", values, callback);
         },
 
         set: function(select, data, callback)
@@ -80,10 +90,21 @@ var model =
                 }
             });
         },
-
-        verify: function(token, callback)
+        
+        verify: function(user_id, callback)
         {
-
+            var user_data = JSON.stringify({verified: new Date().getTime()});
+            model.mysql.query("Update `users` set `user_verified`='1', `user_data`= ? where `user_id` = ?", [user_data, user_id], function(error, response)
+            {
+                if(error)
+                    cllback(error, response);
+                else
+                {
+                    // Escape the user ID just to be safe, even though it really should only ever be hex
+                    user_id = model.mysql.escape(user_id).replace(/'/g, '');
+                    model.mysql.query("Drop event `"+user_id+"`", callback);
+                }
+            });
         }
     }
 };
