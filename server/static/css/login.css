@@ -12,13 +12,20 @@ body {
     padding-left: 15px;
 }
 
-.form {
+.form, .list {
     padding: 30px;
-    padding-bottom: 15px;
     margin-bottom: 30px;
     color: inherit;
     background-color: #eee;
     border-radius: 6px;
+}
+
+.form .form-group:last-of-type {
+    margin-bottom: 0;
+}
+
+.form hr, .list hr {
+    border-top: 1px solid #fff;
 }
 
 /* Custom page header */
@@ -70,6 +77,10 @@ body {
 
 .marketing .blurb {
     margin-bottom: 20px;
+}
+
+.list h1 {
+    margin-top: 0;
 }
 
 .form h2 {

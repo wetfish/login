@@ -269,7 +269,7 @@ module.exports = function(required)
             user_data.profile_saved = new Date().getTime();
 
             // Save member information
-            model.mysql.set({user_id: req.session.user_id}, {user_data: JSON.stringify(user_data)}, function(error, response)
+            model.user.set({user_id: req.session.user_id}, {user_data: JSON.stringify(user_data)}, function(error, response)
             {
                 if(error)
                 {

@@ -1,11 +1,14 @@
 {{> head}}
     {{> header}}
 
-    <div class="form-wrap">
-        <div class="form">
-            <p>You have no apps</p>
+    <div class="alert alert-success" role="alert">
+        <strong>What's an app?</strong>
+        Apps are projects that use Wetfish Profiles. If you're a developer, creating an app is first step towards integrating Wetfish Profiles into your project.
+    </div>
 
-            <a href="/apps/create" class="btn btn-primary">Create An App</a>
-        </div>
+    <div class="list">
+        <p>You have no apps.</p>
+
+        <a href="/apps/create" class="btn btn-primary">Create An App</a>
     </div>
 {{> foot}}

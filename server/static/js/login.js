@@ -43,11 +43,6 @@ $(document).ready(function()
         // Remove previous error messages
         form.parents('.form-wrap').find('.alert').remove();
 
-        form.find('input').each(function()
-        {
-            $(this).siblings('.help-block').remove();
-        });
-
         $.post($(this).attr('action'), $(this).serialize(), function(response)
         {
             try {
@@ -94,6 +89,8 @@ $(document).ready(function()
                             
                             if(input.length)
                             {
+                                // Remove any previous error messages when displaying new ones
+                                input.siblings('.help-block').remove();
                                 input.parents('.form-group').addClass('has-error');
 
                                 var message = $('<p class="help-block" style="display:none">'+error+'</p>');

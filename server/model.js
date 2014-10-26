@@ -106,6 +106,39 @@ var model =
                 }
             });
         }
+    },
+
+    app:
+    {
+        get: function()
+        {
+
+        },
+
+        set: function()
+        {
+
+        },
+
+        create: function()
+        {
+
+        },
+
+        delete: function()
+        {
+
+        },
+
+        join: function()
+        {
+
+        },
+
+        leave: function()
+        {
+
+        }
     }
 };
 
