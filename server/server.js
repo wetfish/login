@@ -43,6 +43,7 @@ require('./routes/profile.js')(required);
 require('./routes/logout.js')(required);
 require('./routes/apps/list.js')(required);
 require('./routes/apps/create.js')(required);
+require('./routes/apps/edit.js')(required);
 require('./routes/apps/verify.js')(required);
 
 app.use(express.static(path.join(__dirname, 'static')));

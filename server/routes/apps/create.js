@@ -149,12 +149,12 @@ module.exports = function(required)
                     if(error)
                     {
                         console.error(error, response);
-                        res.send(JSON.stringify({'status': 'error', 'message': 'An error occured while saving your account information. Please try again'}));
+                        res.send(JSON.stringify({'status': 'error', 'message': 'An error occured while saving your app. Please try again'}));
                         res.end();
                     }
                     else
                     {
-                        res.send(JSON.stringify({'status': 'success', 'message': 'App created, redirecting...', 'redirect': {'url': '/apps', 'timeout': 2}}));
+                        res.send(JSON.stringify({'status': 'success', 'message': 'App created, redirecting...', 'redirect': {'url': '/apps/edit/' + app_id, 'timeout': 2}}));
                         res.end();
                     }
                 });

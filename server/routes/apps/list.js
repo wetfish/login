@@ -23,8 +23,6 @@ module.exports = function(required)
 
         model.app.list(req.session.user.id, function(error, apps)
         {
-console.log(apps);
-            
             console.log("GET: /apps");
             res.render('apps/list', {
                 title: 'Your Apps',

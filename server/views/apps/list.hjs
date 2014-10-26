@@ -7,14 +7,23 @@
     </div>
 
     <div class="list">
-        {{#apps}}
-            <div>{{app_name}}</div>
-        {{/apps}}
+        {{#apps.length}}
+            <a href="/apps/create" class="btn btn-primary pull-right">Create Another App</a>
 
-        {{^apps}}
+            <div class="page-header">
+              <h2>Your Apps <small>&mdash; Apps you've created</small></h2>
+            </div>
+            
+            <ul>
+                {{#apps}}
+                    <li><a href="/apps/edit/{{app_id}}">{{app_name}}</a></li>
+                {{/apps}}
+            </ul>
+        {{/apps.length}}
+
+        {{^apps.length}}
             <p>You don't have any apps.</p>
-        {{/apps}}
-        
-        <a href="/apps/create" class="btn btn-primary">Create An App</a>
+            <a href="/apps/create" class="btn btn-primary">Create An App</a>
+        {{/apps.length}}
     </div>
 {{> foot}}

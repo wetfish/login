@@ -33,6 +33,14 @@ body {
     margin-right: 0.65em;
 }
 
+.list .page-header {
+    margin: 0;
+}
+
+.list h2 {
+    margin-top: 0;
+}
+
 /* Custom page header */
 .header {
     border-bottom: 1px solid #e5e5e5;

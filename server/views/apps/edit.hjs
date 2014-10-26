@@ -1,0 +1,72 @@
+{{> head}}
+    {{> header}}
+
+    {{#error}}
+        <div class="alert alert-danger" role="alert">
+            <strong>Error:</strong> No app was found by this ID. It may have been deleted, or the URL is wrong.
+        </div>
+    {{/error}}
+
+    {{^error}}
+        <div class="form-wrap">
+            <div class="form">
+                <form method="post" action="/apps/edit/{{app.app_id}}" class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">App ID</label>
+                        <div class="col-sm-9">
+                            <input name="id" class="form-control" value="{{app.app_id}}" disabled>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">App Secret</label>
+                        <div class="col-sm-9">
+                            <input name="secret" class="form-control" value="{{app.app_secret}}" disabled>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-offset-3">
+                        <h2>App Information <small class="text-right"><span class="glyphicon glyphicon-cog"></span></small></h2>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Project Name</label>
+                        <div class="col-sm-9">
+                            <input name="name" class="form-control" value="{{app.app_name}}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Project Description</label>
+                        <div class="col-sm-9">
+                            <textarea name="desc" class="form-control">{{app.app_desc}}</textarea>
+                            <p class="help-block">A brief description of your project users see when logging into your app.<br>250 characters or less.</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Website</label>
+                        <div class="col-sm-9">
+                            <input name="website" class="form-control" value="{{app.app_url}}">
+                            <p class="help-block">Your project's home page.</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Callback URL</label>
+                        <div class="col-sm-9">
+                            <input name="callback" class="form-control" value="{{app.app_callback}}">
+                            <p class="help-block">The page users will be redirected to after logging in.</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            <input type="submit" value="Save App" class="btn btn-primary">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {{/error}}
+{{> foot}}
