@@ -20,16 +20,22 @@ module.exports = function(required)
             res.redirect('/');
             return;
         }
-        
-        console.log("GET: /apps");
-        res.render('apps/list', {
-            title: 'Your Apps',
-            user: req.session.user,
-            partials: {
-                head: 'partials/head',
-                header: 'partials/header',
-                foot: 'partials/foot'
-            }
-        });
+
+        model.app.list(req.session.user.id, function(error, apps)
+        {
+console.log(apps);
+            
+            console.log("GET: /apps");
+            res.render('apps/list', {
+                title: 'Your Apps',
+                user: req.session.user,
+                apps: apps,
+                partials: {
+                    head: 'partials/head',
+                    header: 'partials/header',
+                    foot: 'partials/foot'
+                }
+            });
+        });        
     });
 }

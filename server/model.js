@@ -140,6 +140,11 @@ var model =
 
         },
 
+        list: function(creator, callback)
+        {
+            model.mysql.query("Select * from `apps` where `app_creator` = ?", creator, callback);
+        },
+
         join: function()
         {
 

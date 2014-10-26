@@ -7,8 +7,14 @@
     </div>
 
     <div class="list">
-        <p>You don't have any apps.</p>
+        {{#apps}}
+            <div>{{app_name}}</div>
+        {{/apps}}
 
+        {{^apps}}
+            <p>You don't have any apps.</p>
+        {{/apps}}
+        
         <a href="/apps/create" class="btn btn-primary">Create An App</a>
     </div>
 {{> foot}}
