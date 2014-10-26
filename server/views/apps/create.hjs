@@ -3,18 +3,18 @@
 
     <div class="form-wrap">
         <div class="form">
-            <form method="post" action="/register" class="form-horizontal" role="form">
+            <form method="post" action="/apps/create" class="form-horizontal" role="form">
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Project Name</label>
                     <div class="col-sm-9">
-                        <input name="name1" class="form-control">
+                        <input name="name" class="form-control">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Project Description</label>
                     <div class="col-sm-9">
-                        <textarea name="about" class="form-control">{{user_data.about}}</textarea>
+                        <textarea name="desc" class="form-control"></textarea>
                         <p class="help-block">A brief description of your project users see when logging into your app.<br>250 characters or less.</p>
                     </div>
                 </div>
@@ -22,7 +22,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Website</label>
                     <div class="col-sm-9">
-                        <input name="password" type="password" class="form-control">
+                        <input name="website" class="form-control">
                         <p class="help-block">Your project's home page.</p>
                     </div>
                 </div>
@@ -30,8 +30,15 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Callback URL</label>
                     <div class="col-sm-9">
-                        <input name="confirm" type="password" class="form-control">
+                        <input name="callback" class="form-control">
                         <p class="help-block">The page users will be redirected to after logging in.</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-9">
+                        <input name="terms" type="checkbox" class="pull-left">
+                        <p class="help-block">Do you agree to the <a href="/apps/terms">Terms of Service</a>?</p>
                     </div>
                 </div>
 

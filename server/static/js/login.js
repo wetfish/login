@@ -85,7 +85,7 @@ $(document).ready(function()
                         }
                         else
                         {
-                            var input = form.find('input[name="'+field+'"]');
+                            var input = form.find('[name="'+field+'"]');
                             
                             if(input.length)
                             {
@@ -115,9 +115,9 @@ $(document).ready(function()
     });
 
     // Automatically remove error messages when typing into an input
-    $('form input').on('keyup', function()
+    $('form input, form textarea').on('keyup', function()
     {
-        if($(this).val().length)
+        if($(this).val().length && $(this).parents('.form-group').hasClass('has-error'))
         {
             $(this).parents('.form-group').removeClass('has-error');
             $(this).siblings('.help-block').fadeOut(function() { $(this).remove(); });

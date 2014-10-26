@@ -2,10 +2,17 @@
     {{> header}}
     
     <div class="form-wrap">
+        {{#user_data.profile_saved}}
+            <div class="alert alert-success" role="alert">
+                <strong>Don't panic!</strong>
+                When logging into an app, you'll be asked exactly what you want to share.
+            </div>
+        {{/user_data.profile_saved}}
+
         {{^user_data.profile_saved}}
             <div class="alert alert-success" role="alert">
                 <strong>Don't panic!</strong>
-                You can fill out as much or as little as you want.<br>
+                You can fill out as much or as little as you want.
             </div>
         {{/user_data.profile_saved}}
 

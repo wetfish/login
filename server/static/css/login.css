@@ -28,6 +28,11 @@ body {
     border-top: 1px solid #fff;
 }
 
+.form input[type="checkbox"] {
+    margin-top:0.65em;
+    margin-right: 0.65em;
+}
+
 /* Custom page header */
 .header {
     border-bottom: 1px solid #e5e5e5;

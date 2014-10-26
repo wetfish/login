@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 CREATE TABLE IF NOT EXISTS `apps` (
   `app_id` varchar(64) NOT NULL,
   `app_secret` varchar(64) NOT NULL,
+  `app_creator` varchar(64) NOT NULL,
   `app_name` varchar(32) NOT NULL,
   `app_desc` varchar(256) NOT NULL,
   `app_url` varchar(256) NOT NULL,

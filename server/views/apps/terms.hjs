@@ -1,0 +1,11 @@
+{{> head}}
+    {{> header}}
+
+    <div class="form">
+        <h1>Terms of Service</h1>
+
+        <p>By creating an app for Wetfish Profiles you agree not to be a jerk.</p>
+        <p>You also agree that your app may be terminated at any time if we determine you are being a jerk.</p>
+        <p>I am not a lawyer please don't sue me.</p>
+    </div>
+{{> foot}}
