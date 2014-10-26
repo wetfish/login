@@ -17,44 +17,27 @@ function verify_token(req, callback)
     else
     {
         // Does this token exist?
-        client[4].get(req.query.token, function(error, user_id)
+        model.user.get({user_token: req.query.token, user_verified: 0}, function(error, response)
         {
-            if(!user_id)
+            console.log(error, response, req.query);
+            
+            if(!response.length)
             {
                 callback({'status': 'error', 'message': "Invalid token specified. Your account may have expired or is already validated."});
             }
             else
             {
-                client[1].get(user_id, function(error, user_data)
+                var user = response[0];
+
+                model.user.verify(user.user_id, function(error, response)
                 {
-                    if(!user_data)
+                    if(error)
                     {
-                        callback({'status': 'error', 'message': "User not found. Your token was valid, but no user information was found. How strange!"});
+                        callback({'status': 'error', 'message': "User found, but an error occured while saving your account information. How strange!"});
                     }
                     else
                     {
-                        user_data = JSON.parse(user_data);
-                        user_data.verified = new Date().getTime();
-
-                        // Save member information in redis
-                        async.parallel([
-                            model.async(client[1], client[1].set, [user_id, JSON.stringify(user_data)]),
-                            model.async(client[2], client[2].persist, [user_data.username]),
-                            model.async(client[3], client[3].persist, [user_data.email]),
-                            model.async(client[4], client[4].del, [req.query.token]),
-                        ],
-
-                        function(error, response)
-                        {
-                            if(error)
-                            {
-                                callback({'status': 'error', 'message': "User found, but an error occured while saving your account information. How strange!"});
-                            }
-                            else
-                            {
-                                callback({'status': 'success', 'message': "Your account is now verified. You may now log in."});
-                            }
-                        });
+                        callback({'status': 'success', 'message': "Your account is now verified. You may now log in."});
                     }
                 });
             }
