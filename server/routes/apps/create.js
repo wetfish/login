@@ -1,6 +1,7 @@
 // Required modules
 var async = require('async');
 var validator = require('validator');
+var crypto = require('crypto');
 
 // Variables passed from server.js
 var client, model, app;
@@ -21,6 +22,26 @@ function check_url(url)
     }
 
     return false;
+}
+
+
+function generate_id(callback)
+{
+    var salt = crypto.randomBytes(32).toString('base64');
+    var noise = crypto.randomBytes(32).toString('base64');
+    var unique_id = crypto.createHmac("sha256", salt).update(noise).digest("hex");
+
+    // Check to make sure the generated ID doesn't already exist in the database
+    model.app.get({app_id: unique_id}, function(error, response)
+    {
+        // If this ID is already in use, try generating again (hahah there was a collision, YEAH RIGHT)
+        if(response.length)
+            generate_token(callback);
+
+        // Otherwise, pass our generated ID to the callback
+        else
+            callback(unique_id);
+    });
 }
 
 
@@ -53,7 +74,12 @@ module.exports = function(required)
 
     app.post('/apps/create', function(req, res)
     {
-        console.log(req.body);
+        // Users shouldn't be here if they're not logged in
+        if(typeof req.session.user == "undefined")
+        {
+            res.redirect('/');
+            return;
+        }
 
         var errors = {};
         var fields = ['name', 'desc', 'website', 'callback'];
@@ -95,10 +121,44 @@ module.exports = function(required)
         else
         {
             // Generate unique ID for the app
-            // Save app information
-            // Save app meta-info in user data
+            generate_id(function(app_id)
+            {
+                // Generate secret key
+                var salt = crypto.randomBytes(32).toString('base64');
+                var noise = crypto.randomBytes(32).toString('base64');
+                var secret_key = crypto.createHmac("sha256", salt).update(noise).digest("hex");
 
-            res.end();
+                // Sanitize data before inserting it
+                var name = validator.escape(req.body.name);
+                var desc = validator.escape(req.body.desc);
+
+                var data =
+                {
+                    app_id: app_id,
+                    app_secret: secret_key,
+                    app_creator: req.session.user.id,
+                    app_name: name,
+                    app_desc: desc,
+                    app_url: website,
+                    app_callback: callback
+                };
+
+                // Save app information
+                model.app.create(data, function(error, response)
+                {
+                    if(error)
+                    {
+                        console.error(error, response);
+                        res.send(JSON.stringify({'status': 'error', 'message': 'An error occured while saving your account information. Please try again'}));
+                        res.end();
+                    }
+                    else
+                    {
+                        res.send(JSON.stringify({'status': 'success', 'message': 'App created, redirecting...', 'redirect': {'url': '/apps', 'timeout': 2}}));
+                        res.end();
+                    }
+                });
+            });
         }
     });
 

@@ -22,6 +22,8 @@ CREATE TABLE IF NOT EXISTS `apps` (
   `app_desc` varchar(256) NOT NULL,
   `app_url` varchar(256) NOT NULL,
   `app_callback` varchar(256) NOT NULL,
+  `app_created` datetime NOT NULL,
+  `app_active` datetime NOT NULL,
   UNIQUE KEY `app_id` (`app_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -30,5 +32,7 @@ CREATE TABLE IF NOT EXISTS `app_users` (
   `user_id` varchar(64) NOT NULL,
   `app_id` varchar(64) NOT NULL,
   `app_permission` int(1) NOT NULL,
-  KEY `user_id` (`user_id`,`app_id`)
+  `user_permission` text NOT NULL,
+  KEY `user_id` (`user_id`),
+  KEY `app_id` (`app_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

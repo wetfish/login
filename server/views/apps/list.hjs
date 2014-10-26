@@ -7,7 +7,7 @@
     </div>
 
     <div class="list">
-        <p>You have no apps.</p>
+        <p>You don't have any apps.</p>
 
         <a href="/apps/create" class="btn btn-primary">Create An App</a>
     </div>

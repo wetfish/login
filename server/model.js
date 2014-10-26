@@ -110,19 +110,29 @@ var model =
 
     app:
     {
-        get: function()
+        get: function(select, callback)
         {
+            var where = [];
+            var values = [];
+            
+            for(var i = 0, keys = Object.keys(select), l = keys.length; i < l; i++)
+            {
+                where.push(model.mysql.escapeId(keys[i]) + ' = ?');
+                values.push(select[keys[i]]);
+            }
 
+            where = where.join(' and ');
+            model.mysql.query("Select * from `apps` where "+where+" limit 1", values, callback);
         },
 
-        set: function()
+        set: function(select, data, callback)
         {
-
+            model.mysql.query("Update `apps` set ? where ?", [data, select], callback);
         },
 
-        create: function()
+        create: function(data, callback)
         {
-
+            model.mysql.query("Insert into `apps` set ?, `app_created` = now()", data, callback);
         },
 
         delete: function()
