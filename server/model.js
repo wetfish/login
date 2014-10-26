@@ -49,27 +49,38 @@ var model =
         }
     },
 
+    where: function(select, glue)
+    {
+        if(typeof glue == "undefined")
+            glue = " and ";
+
+        var where = [];
+        var values = [];
+        
+        for(var i = 0, keys = Object.keys(select), l = keys.length; i < l; i++)
+        {
+            where.push(model.mysql.escapeId(keys[i]) + ' = ?');
+            values.push(select[keys[i]]);
+        }
+
+        return {where: where.join(glue), values: values};
+    },
+
     // Functions for getting and setting user data
     user:
     {
         get: function(select, callback)
         {
-            var where = [];
-            var values = [];
-            
-            for(var i = 0, keys = Object.keys(select), l = keys.length; i < l; i++)
-            {
-                where.push(model.mysql.escapeId(keys[i]) + ' = ?');
-                values.push(select[keys[i]]);
-            }
-
-            where = where.join(' and ');            
-            model.mysql.query("Select * from `users` where "+where+" limit 1", values, callback);
+            select = model.where(select);
+            model.mysql.query("Select * from `users` where "+select.where+" limit 1", select.values, callback);
         },
 
         set: function(select, data, callback)
         {
-            model.mysql.query("Update `users` set ?, `user_active` = now() where ?", [data, select], callback);
+            select = model.where(select);
+            select.values.unshift(data);
+
+            model.mysql.query("Update `users` set ?, `user_active` = now() where "+select.where, select.values, callback);
         },
 
         register: function(data, callback)
@@ -112,22 +123,17 @@ var model =
     {
         get: function(select, callback)
         {
-            var where = [];
-            var values = [];
-            
-            for(var i = 0, keys = Object.keys(select), l = keys.length; i < l; i++)
-            {
-                where.push(model.mysql.escapeId(keys[i]) + ' = ?');
-                values.push(select[keys[i]]);
-            }
-
-            where = where.join(' and ');
-            model.mysql.query("Select * from `apps` where "+where+" limit 1", values, callback);
+            select = model.where(select);
+            model.mysql.query("Select * from `apps` where "+select.where+" limit 1", select.values, callback);
         },
 
         set: function(select, data, callback)
         {
-            model.mysql.query("Update `apps` set ? where ?", [data, select], callback);
+            select = model.where(select);
+            select.values.unshift(data);
+            
+            var query = model.mysql.query("Update `apps` set ? where "+select.where, select.values, callback);
+            console.log(query.sql);
         },
 
         create: function(data, callback)
