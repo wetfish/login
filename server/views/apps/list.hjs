@@ -1,13 +1,13 @@
 {{> head}}
     {{> header}}
 
-    <div class="alert alert-success" role="alert">
-        <strong>What's an app?</strong>
-        Apps are projects that use Wetfish Profiles. If you're a developer, creating an app is first step towards integrating Wetfish Profiles into your project.
-    </div>
+    {{#apps.length}}
+        <div class="alert alert-success" role="alert">
+            <strong>Get started!</strong>
+            Now that you've created an app, check out <a href="https://github.com/wetfish/login">the documentation</a> on github.
+        </div>
 
-    <div class="list">
-        {{#apps.length}}
+        <div class="list">
             <a href="/apps/create" class="btn btn-primary pull-right">Create Another App</a>
 
             <div class="page-header">
@@ -19,11 +19,18 @@
                     <li><a href="/apps/edit/{{app_id}}">{{app_name}}</a></li>
                 {{/apps}}
             </ul>
-        {{/apps.length}}
+        </div>
+    {{/apps.length}}
 
-        {{^apps.length}}
+    {{^apps.length}}
+        <div class="alert alert-success" role="alert">
+            <strong>What's an app?</strong>
+            Apps are projects that use Wetfish Profiles. If you're a developer, creating an app is first step towards integrating Wetfish Profiles into your project.
+        </div>
+
+        <div class="list">
             <p>You don't have any apps.</p>
             <a href="/apps/create" class="btn btn-primary">Create An App</a>
-        {{/apps.length}}
-    </div>
+        </div>
+    {{/apps.length}}
 {{> foot}}

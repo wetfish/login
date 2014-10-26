@@ -60,6 +60,101 @@
                         </div>
                     </div>
 
+                    <div class="col-sm-offset-3">
+                        <h2>Requested Permissions <small class="text-right"><span class="glyphicon glyphicon-user"></span></small></h2>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Basic Info</label>
+                        <div class="col-sm-9">
+                            <div>                                
+                                <input name="req[user_name]" type="checkbox" class="pull-left" {{#app.req.user_name}}checked{{/app.req.user_name}}>
+                                <p class="help-block">Username</p>
+                            </div>
+
+                            <div>
+                                <input name="req[user_email]" type="checkbox" class="pull-left" {{#app.req.user_email}}checked{{/app.req.user_email}}>
+                                <p class="help-block">Email</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Social Media</label>
+                        <div class="col-sm-9">
+                            <div>
+                                <input name="req[ud][website]" type="checkbox" class="pull-left" {{#app.req.ud.website}}checked{{/app.req.ud.website}}>
+                                <p class="help-block">Website</p>
+                            </div>
+
+                            <div>
+                                <input name="req[ud][twitter]" type="checkbox" class="pull-left" {{#app.req.ud.twitter}}checked{{/app.req.ud.twitter}}>
+                                <p class="help-block">Twitter</p>
+                            </div>
+
+                            <div>
+                                <input name="req[ud][facebook]" type="checkbox" class="pull-left" {{#app.req.ud.facebook}}checked{{/app.req.ud.facebook}}>
+                                <p class="help-block">Facebook</p>
+                            </div>
+
+                            <div>
+                                <input name="req[ud][soundcloud]" type="checkbox" class="pull-left" {{#app.req.ud.soundcloud}}checked{{/app.req.ud.soundcloud}}>
+                                <p class="help-block">SoundCloud</p>
+                            </div>
+
+                            <div>
+                                <input name="req[ud][bandcamp]" type="checkbox" class="pull-left" {{#app.req.ud.bandcamp}}checked{{/app.req.ud.bandcamp}}>
+                                <p class="help-block">Bandcamp</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Personal Info</label>
+                        <div class="col-sm-9">
+                            <div>
+                                <input name="req[ud][about]" type="checkbox" class="pull-left" {{#app.req.ud.about}}checked{{/app.req.ud.about}}>
+                                <p class="help-block">About</p>
+                            </div>
+
+                            <div>
+                                <input name="req[ud][full_name]" type="checkbox" class="pull-left" {{#app.req.ud.full_name}}checked{{/app.req.ud.full_name}}>
+                                <p class="help-block">Full Name</p>
+                            </div>
+
+                            <div>
+                                <input name="req[ud][birth]" type="checkbox" class="pull-left" {{#app.req.ud.birth}}checked{{/app.req.ud.birth}}>
+                                <p class="help-block">Birthday</p>
+                            </div>
+
+                            <div>
+                                <input name="req[ud][phone]" type="checkbox" class="pull-left" {{#app.req.ud.phone}}checked{{/app.req.ud.phone}}>
+                                <p class="help-block">Phone Number</p>
+                            </div>
+
+                            <div>
+                                <input name="req[ud][address]" type="checkbox" class="pull-left" {{#app.req.ud.address}}checked{{/app.req.ud.address}}>
+                                <p class="help-block">Address</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Nerdy Stuff</label>
+                        <div class="col-sm-9">
+                            <div>
+                                <input name="req[ud][github]" type="checkbox" class="pull-left" {{#app.req.ud.github}}checked{{/app.req.ud.github}}>
+                                <p class="help-block">GitHub Profile</p>
+                            </div>
+
+                            <div>
+                                <input name="req[ud][pubkey]" type="checkbox" class="pull-left" {{#app.req.ud.pubkey}}checked{{/app.req.ud.pubkey}}>
+                                <p class="help-block">Public Key</p>
+                            </div>
+                        </div>
+                    </div>
+
+
                     <div class="form-group">
                         <div class="col-sm-offset-3 col-sm-9">
                             <input type="submit" value="Save App" class="btn btn-primary">

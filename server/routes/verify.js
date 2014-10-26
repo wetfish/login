@@ -18,9 +18,7 @@ function verify_token(req, callback)
     {
         // Does this token exist?
         model.user.get({user_token: req.query.token, user_verified: 0}, function(error, response)
-        {
-            console.log(error, response, req.query);
-            
+        {            
             if(!response.length)
             {
                 callback({'status': 'error', 'message': "Invalid token specified. Your account may have expired or is already validated."});

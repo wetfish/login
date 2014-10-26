@@ -132,13 +132,13 @@ var model =
             select = model.where(select);
             select.values.unshift(data);
             
-            var query = model.mysql.query("Update `apps` set ? where "+select.where, select.values, callback);
-            console.log(query.sql);
+            model.mysql.query("Update `apps` set ? where "+select.where, select.values, callback);
         },
 
         create: function(data, callback)
         {
-            model.mysql.query("Insert into `apps` set ?, `app_created` = now()", data, callback);
+            var default_permissions = JSON.stringify({user_name: true, user_email: true, user_data: {}});
+            model.mysql.query("Insert into `apps` set ?, `app_created` = now(), `app_permission` = ?", [data, default_permissions], callback);
         },
 
         delete: function()

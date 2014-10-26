@@ -47,20 +47,26 @@ module.exports = function(required)
             return;
         }
 
-        model.app.get({app_id: req.params.id, app_creator: req.session.user.id}, function(error, app)
+        model.app.get({app_id: req.params.id, app_creator: req.session.user.id}, function(error, application)
         {
             var error = false;
             
-            if(!app.length)
+            if(!application.length)
                 error = true;
             else
-                app = app[0];
-                
-            console.log("GET: /apps/edit/" + req.id);
+            {
+                application = application[0];
+
+                // Create shortened variable names so we don't have to type as much in the templates
+                application.req = JSON.parse(application.app_permission);
+                application.req.ud = application.req.user_data;
+            }
+            
+            console.log("GET: /apps/edit/" + req.params.id);
             res.render('apps/edit', {
                 title: 'Edit an App',
                 user: req.session.user,
-                app: app,
+                app: application,
                 error: error,
                 partials: {
                     head: 'partials/head',
@@ -126,13 +132,24 @@ module.exports = function(required)
             // Sanitize data before saving it
             var name = validator.escape(req.body.name);
             var desc = validator.escape(req.body.desc);
+            var permissions = req.body.req;
+
+            if(typeof permissions != "object")
+                permissions = {};
+
+            if(typeof permissions.ud != "object")
+                permissions.ud = {};
+
+            permissions.user_data = permissions.ud;
+            delete(permissions.ud);
 
             var data =
             {
                 app_name: name,
                 app_desc: desc,
                 app_url: website,
-                app_callback: callback
+                app_callback: callback,
+                app_permission: JSON.stringify(permissions)
             };
 
             var select =

@@ -37,8 +37,10 @@
 
                 <div class="form-group">
                     <div class="col-sm-offset-3 col-sm-9">
-                        <input name="terms" type="checkbox" class="pull-left">
-                        <p class="help-block">Do you agree to the <a href="/apps/terms">Terms of Service</a>?</p>
+                        <div>
+                            <input name="terms" type="checkbox" class="pull-left">
+                            <p class="help-block">Do you agree to the <a href="/apps/terms">Terms of Service</a>?</p>
+                        </div>
                     </div>
                 </div>
 
