@@ -44,49 +44,56 @@ function verify_login(req, callback)
                 var user = response[0];
                 var user_data = JSON.parse(user.user_data);
 
-                // Verify password
-                bcrypt.compare(req.body.password, user.user_password, function(error, valid)
+                if(!user.user_verified)
                 {
-                    if(!valid)
+                    callback({'status': 'error', 'message': "You must verify your email address before loggin in."});
+                }
+                else
+                {
+                    // Verify password
+                    bcrypt.compare(req.body.password, user.user_password, function(error, valid)
                     {
-                        callback({'status': 'error', 'errors': {'password': 'Invalid password!'}});
-                    }
-                    else
-                    {
-                        // Save the first and last login date for this user
-                        if(typeof user_data.logged_in == "undefined")
-                            user_data.logged_in = {'first': new Date().getTime()};
-                        
-                        user_data.logged_in.last = new Date().getTime();
-
-                        var where = {user_id: user.user_id};
-                        var update = {user_data: JSON.stringify(user_data)};
-
-                        // Save member information
-                        model.user.set(where, update, function(error, response)
+                        if(!valid)
                         {
-                            if(error)
+                            callback({'status': 'error', 'errors': {'password': 'Invalid password!'}});
+                        }
+                        else
+                        {
+                            // Save the first and last login date for this user
+                            if(typeof user_data.logged_in == "undefined")
+                                user_data.logged_in = {'first': new Date().getTime()};
+                            
+                            user_data.logged_in.last = new Date().getTime();
+
+                            var where = {user_id: user.user_id};
+                            var update = {user_data: JSON.stringify(user_data)};
+
+                            // Save member information
+                            model.user.set(where, update, function(error, response)
                             {
-                                callback({'status': 'error', 'message': "You logged in, but an error occured while saving your account information. Please try again."});
-                            }
-                            else
-                            {
-                                // Avoid saving passwords in session data
-                                var session =
+                                if(error)
                                 {
-                                    id: user.user_id,
-                                    name: user.user_name,
-                                    email: user.user_email
-                                };
-                                
-                                req.session.user = session;
-                                req.session.user_data = user_data;
-                                
-                                callback({'status': 'success', 'message': "You are now logged in.", 'redirect': {'url': '/', 'timeout': 2}});
-                            }
-                        });
-                    }
-                });            
+                                    callback({'status': 'error', 'message': "You logged in, but an error occured while saving your account information. Please try again."});
+                                }
+                                else
+                                {
+                                    // Avoid saving passwords in session data
+                                    var session =
+                                    {
+                                        id: user.user_id,
+                                        name: user.user_name,
+                                        email: user.user_email
+                                    };
+                                    
+                                    req.session.user = session;
+                                    req.session.user_data = user_data;
+                                    
+                                    callback({'status': 'success', 'message': "You are now logged in.", 'redirect': {'url': '/', 'timeout': 2}});
+                                }
+                            });
+                        }
+                    });
+                }
             }
         });
     }
