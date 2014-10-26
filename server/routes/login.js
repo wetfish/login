@@ -108,7 +108,7 @@ module.exports = function(required)
     app.get('/login', function(req, res)
     {
         // Users shouldn't be here if they're already logged in
-        if(typeof req.session.user_data != "undefined")
+        if(typeof req.session.user != "undefined")
         {
             res.redirect('/');
             return;

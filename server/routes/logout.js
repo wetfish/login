@@ -7,14 +7,14 @@ module.exports = function(required)
         var user;
 
         // Users shouldn't be here if they're not logged in
-        if(typeof req.session.user_data == "undefined")
+        if(typeof req.session.user == "undefined")
         {
             res.redirect('/');
             return;
         }
         else
         {
-            user = req.session.user_data.username;
+            user = req.session.user.name;
             req.session.destroy();
         }
         
