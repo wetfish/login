@@ -21,19 +21,30 @@ module.exports = function(required)
             return;
         }
 
-        model.app.list(req.session.user.id, function(error, apps)
+        async.parallel([
+            model.async(null, model.app.list, [req.session.user.id]),
+            model.async(null, model.user.apps, [req.session.user.id])
+        ],
+
+        function(error, response)
         {
+            var apps = response[0];
+            var authed = response[1];
+            
             console.log("GET: /apps");
-            res.render('apps/list', {
+            res.render('apps/list',
+            {
                 title: 'Your Apps',
                 user: req.session.user,
                 apps: apps,
-                partials: {
+                authed: authed,
+                partials:
+                {
                     head: 'partials/head',
                     header: 'partials/header',
                     foot: 'partials/foot'
                 }
             });
-        });        
+        });
     });
 }

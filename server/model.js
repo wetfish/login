@@ -118,9 +118,13 @@ var model =
             });
         },
 
-        apps: function()
+        apps: function(user_id, callback)
         {
-
+            var query = "Select * from `apps` as a, `app_users` as au " +
+                        "where au.user_id = ? " +
+                        "and au.app_id = a.app_id";
+            
+            model.mysql.query(query, user_id, callback);
         }
     },
 

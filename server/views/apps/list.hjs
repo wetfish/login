@@ -33,4 +33,18 @@
             <a href="/apps/create" class="btn btn-primary">Create An App</a>
         </div>
     {{/apps.length}}
+
+    {{#authed.length}}
+        <div class="list">
+            <div class="page-header">
+              <h2>Authorized Apps <small>&mdash; Apps you've signed up for</small></h2>
+            </div>
+            
+            <ul>
+                {{#authed}}
+                    <li><a href="/apps/manage/{{app_id}}">{{app_name}}</a></li>
+                {{/authed}}
+            </ul>
+        </div>
+    {{/authed.length}}
 {{> foot}}
