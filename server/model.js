@@ -116,6 +116,11 @@ var model =
                     model.mysql.query("Drop event `"+user_id+"`", callback);
                 }
             });
+        },
+
+        apps: function()
+        {
+
         }
     },
 
@@ -151,9 +156,19 @@ var model =
             model.mysql.query("Select * from `apps` where `app_creator` = ?", creator, callback);
         },
 
-        join: function()
+        join: function(data, callback)
         {
+            async.parallel([
+                model.async(model.mysql, model.mysql.query, ["Update `users` set `user_active` = now() where `user_id` = ?", data.user_id]),
+                model.async(model.mysql, model.mysql.query, ["Update `apps` set `app_active` = now() where `app_id` = ?", data.app_id]),
+                model.async(model.mysql, model.mysql.query, ["Insert into `app_users` set ?, `user_joined` = now()", data])
+            ],
 
+            function(error, response)
+            {
+                // Return the response to the callback
+                callback(error, response);
+            });
         },
 
         leave: function()

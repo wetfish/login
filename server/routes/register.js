@@ -52,7 +52,7 @@ module.exports = function(required)
     app = required.app;
     sendgrid = required.sendgrid;
     
-    app.get('/register', function(req, res)
+    app.get('/register/:action?/:id?', function(req, res)
     {
         // Users shouldn't be here if they're already logged in
         if(typeof req.session.user != "undefined")

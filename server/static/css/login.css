@@ -40,6 +40,12 @@ body {
     margin-top: 0;
 }
 
+.join-form .btn {
+    padding-left: 2em;
+    padding-right: 2em;
+    margin-right: 2em;
+}
+
 /* Custom page header */
 .header {
     border-bottom: 1px solid #e5e5e5;

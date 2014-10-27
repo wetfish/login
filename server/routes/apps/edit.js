@@ -86,13 +86,6 @@ module.exports = function(required)
             return;
         }
 
-        // If no app id is specified, bounce users back to the apps page
-        if(typeof req.params.id == "undefined")
-        {
-            res.redirect('/apps');
-            return;
-        }
-
         var errors = {};
         var fields = ['name', 'desc', 'website', 'callback'];
 

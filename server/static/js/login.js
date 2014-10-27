@@ -34,6 +34,23 @@ $(document).ready(function()
         }
     });
 
+    // Automatically hide unchecked permission boxes on join pages
+    $('.join-form input[type="checkbox"]').each(function()
+    {
+        if(!$(this).prop('checked'))
+            $(this).parents('.permission').hide();
+    });
+
+    $('.join-form .form-group').each(function()
+    {
+        // Only hide form groups which contain permission divs
+        if($(this).find('.permission').length)
+        {
+            if(!$(this).find('.permission:visible').length)
+                $(this).hide();
+        }
+    });
+
     // Use AJAX to submit all forms
     $('form').on('submit', function(event)
     {

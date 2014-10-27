@@ -105,7 +105,7 @@ module.exports = function(required)
     model = required.model;
     app = required.app;
     
-    app.get('/login', function(req, res)
+    app.get('/login/:action?/:id?', function(req, res)
     {
         // Users shouldn't be here if they're already logged in
         if(typeof req.session.user != "undefined")

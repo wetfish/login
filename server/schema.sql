@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS `app_users` (
   `app_id` varchar(64) NOT NULL,
   `app_admin` int(1) NOT NULL,
   `user_permission` text NOT NULL,
+  `user_joined` datetime NOT NULL,
   KEY `user_id` (`user_id`),
   KEY `app_id` (`app_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
