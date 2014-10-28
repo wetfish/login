@@ -123,7 +123,7 @@ module.exports = function(required)
                             }
                             else
                             {
-                                res.send(JSON.stringify({'status': 'success', 'message': 'App authorized', 'redirect': {'url': '/apps', 'timeout': 2}}));
+                                res.send(JSON.stringify({'status': 'success', 'message': 'App authorized', 'redirect': {'url': '/apps/token/'+req.params.id, 'timeout': 2}}));
                                 res.end();
                             }
                         });

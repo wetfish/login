@@ -40,13 +40,6 @@ module.exports = function(required)
             return;
         }
 
-        // If no app id is specified, bounce users back to the apps page
-        if(typeof req.params.id == "undefined")
-        {
-            res.redirect('/apps');
-            return;
-        }
-
         model.app.get({app_id: req.params.id, app_creator: req.session.user.id}, function(error, application)
         {
             var error = false;
