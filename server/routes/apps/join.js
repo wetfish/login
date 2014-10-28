@@ -21,33 +21,45 @@ module.exports = function(required)
             return;
         }
 
-        model.app.get({app_id: req.params.id}, function(error, application)
+        model.user.joined({app_id: req.params.id, user_id: req.session.user.id}, function(joined)
         {
-            var error = false;
-            
-            if(!application.length)
-                error = true;
+            // If the user has already joined this app
+            if(joined)
+            {
+                res.redirect('/apps/token/'+req.params.id);
+                return;
+            }
             else
             {
-                application = application[0];
+                model.app.get({app_id: req.params.id}, function(error, application)
+                {
+                    var error = false;
+                    
+                    if(!application.length)
+                        error = true;
+                    else
+                    {
+                        application = application[0];
 
-                // Create shortened variable names so we don't have to type as much in the templates
-                application.req = JSON.parse(application.app_permission);
-                application.req.ud = application.req.user_data;
+                        // Create shortened variable names so we don't have to type as much in the templates
+                        application.req = JSON.parse(application.app_permission);
+                        application.req.ud = application.req.user_data;
+                    }
+                    
+                    console.log("GET: /apps/join/" + req.params.id);
+                    res.render('apps/join', {
+                        title: 'Do you authorize this app?',
+                        user: req.session.user,
+                        app: application,
+                        error: error,
+                        partials: {
+                            head: 'partials/head',
+                            foot: 'partials/foot'
+                        }
+                    });
+                });
             }
-            
-            console.log("GET: /apps/edit/" + req.params.id);
-            res.render('apps/join', {
-                title: 'Do you authorize this app?',
-                user: req.session.user,
-                app: application,
-                error: error,
-                partials: {
-                    head: 'partials/head',
-                    foot: 'partials/foot'
-                }
-            });
-        });        
+        });
     });
 
     app.post('/apps/join/:id', function(req, res)
@@ -59,50 +71,62 @@ module.exports = function(required)
             return;
         }
 
-        model.app.get({app_id: req.params.id}, function(error, application)
+        model.user.joined({app_id: req.params.id, user_id: req.session.user.id}, function(joined)
         {
-            if(!application.length)
+            // If the user has already joined this app
+            if(joined)
             {
-                res.send(JSON.stringify({'status': 'error', 'message': 'No app was found by this ID. It may have been deleted, or the URL is wrong.'}));
+                res.send(JSON.stringify({'status': 'error', 'message': "You've already joined this app!", 'redirect': {'url': '/apps/token/'+req.params.id, 'timeout': 2}}));
                 res.end();
             }
             else
             {
-                application = application[0];
-                
-                // Sanitize data before saving it
-                var permissions = req.body.req;
-
-                if(typeof permissions != "object")
-                    permissions = {};
-
-                if(typeof permissions.ud != "object")
-                    permissions.ud = {};
-
-                permissions.user_data = permissions.ud;
-                delete(permissions.ud);
-
-                var data =
+                model.app.get({app_id: req.params.id}, function(error, application)
                 {
-                    user_id: req.session.user.id,
-                    app_id: req.params.id,
-                    app_admin: (application.app_creator == req.session.user.id) ? 1 : 0,
-                    user_permission: JSON.stringify(permissions)
-                };
-
-                // Save app information
-                model.app.join(data, function(error, response)
-                {
-                    if(error)
+                    if(!application.length)
                     {
-                        console.error(error, response);
-                        res.send(JSON.stringify({'status': 'error', 'message': 'An error occured while authorizing this app. Please try again'}));
+                        res.send(JSON.stringify({'status': 'error', 'message': 'No app was found by this ID. It may have been deleted, or the URL is wrong.'}));
                         res.end();
                     }
                     else
                     {
-                        res.send(JSON.stringify({'status': 'success', 'message': 'App authorized'}));
-                        res.end();
+                        application = application[0];
+                        
+                        // Sanitize data before saving it
+                        var permissions = req.body.req;
+
+                        if(typeof permissions != "object")
+                            permissions = {};
+
+                        if(typeof permissions.ud != "object")
+                            permissions.ud = {};
+
+                        permissions.user_data = permissions.ud;
+                        delete(permissions.ud);
+
+                        var data =
+                        {
+                            user_id: req.session.user.id,
+                            app_id: req.params.id,
+                            app_admin: (application.app_creator == req.session.user.id) ? 1 : 0,
+                            user_permission: JSON.stringify(permissions)
+                        };
+
+                        // Save app information
+                        model.app.join(data, function(error, response)
+                        {
+                            if(error)
+                            {
+                                console.error(error, response);
+                                res.send(JSON.stringify({'status': 'error', 'message': 'An error occured while authorizing this app. Please try again'}));
+                                res.end();
+                            }
+                            else
+                            {
+                                res.send(JSON.stringify({'status': 'success', 'message': 'App authorized', 'redirect': {'url': '/apps', 'timeout': 2}}));
+                                res.end();
+                            }
+                        });
                     }
                 });
             }

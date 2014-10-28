@@ -125,6 +125,27 @@ var model =
                         "and au.app_id = a.app_id";
             
             model.mysql.query(query, user_id, callback);
+        },
+
+        // Helper function which returns true or false if a user has authorized an app
+        joined: function(data, callback)
+        {
+            select = model.where(data);
+            model.mysql.query("Select * from `app_users` where "+select.where, select.values, function(error, response)
+            {
+                if(error)
+                {
+                    console.log(error);
+                    callback(false);
+                }
+                else
+                {
+                    if(response.length)
+                        callback(true);
+                    else
+                        callback(false);
+                }
+            });
         }
     },
 
