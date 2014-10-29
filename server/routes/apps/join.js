@@ -33,6 +33,7 @@ module.exports = function(required)
             {
                 model.app.get({app_id: req.params.id}, function(error, application)
                 {
+                    // TODO: Add actual error handling?
                     var error = false;
                     
                     if(!application.length)

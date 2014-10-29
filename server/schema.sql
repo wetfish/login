@@ -38,3 +38,15 @@ CREATE TABLE IF NOT EXISTS `app_users` (
   KEY `user_id` (`user_id`),
   KEY `app_id` (`app_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `app_tokens` (
+  `user_id` varchar(64) NOT NULL,
+  `app_id` varchar(64) NOT NULL,
+  `token_id` varchar(64) NOT NULL,
+  `token_created` datetime NOT NULL,
+  KEY `user_id` (`user_id`),
+  KEY `app_id` (`app_id`),
+  UNIQUE KEY `token_id` (`token_id`)  
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+

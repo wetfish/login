@@ -199,7 +199,21 @@ var model =
         leave: function()
         {
 
+        },
+    },
+
+    token:
+    {
+        get: function(token, callback)
+        {
+            model.mysql.query("Select `token_id` from `app_tokens` where `token_id` = ?", token, callback);
+        },
+
+        create: function(data, callback)
+        {
+            model.mysql.query("Insert into `app_tokens` set ?, `token_created` = now()", data, callback);
         }
+
     }
 };
 

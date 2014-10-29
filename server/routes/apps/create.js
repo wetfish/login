@@ -36,7 +36,7 @@ function generate_id(callback)
     {
         // If this ID is already in use, try generating again (hahah there was a collision, YEAH RIGHT)
         if(response.length)
-            generate_token(callback);
+            generate_id(callback);
 
         // Otherwise, pass our generated ID to the callback
         else
