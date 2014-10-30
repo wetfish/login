@@ -18,8 +18,6 @@ function generate_token(callback)
     // Check to make sure the generated ID doesn't already exist in the database
     model.token.get(unique_id, function(error, response)
     {
-console.log(error, response);
-        
         // If this ID is already in use, try generating again (hahah there was a collision, YEAH RIGHT)
         if(response.length)
             generate_token(callback);

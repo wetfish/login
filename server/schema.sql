@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `apps` (
 CREATE TABLE IF NOT EXISTS `app_users` (
   `user_id` varchar(64) NOT NULL,
   `app_id` varchar(64) NOT NULL,
-  `app_admin` int(1) NOT NULL,
+  `app_admin` tinyint(1) NOT NULL,
   `user_permission` text NOT NULL,
   `user_joined` datetime NOT NULL,
   KEY `user_id` (`user_id`),
@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS `app_tokens` (
   `app_id` varchar(64) NOT NULL,
   `token_id` varchar(64) NOT NULL,
   `token_created` datetime NOT NULL,
+  `token_used` smallint(6) NOT NULL,
   KEY `user_id` (`user_id`),
   KEY `app_id` (`app_id`),
   UNIQUE KEY `token_id` (`token_id`)  
