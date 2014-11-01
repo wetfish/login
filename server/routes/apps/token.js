@@ -77,7 +77,7 @@ module.exports = function(required)
                                 console.log(error);
 
                                 // TODO: Make a general purpose error template?
-                                res.end("An error occured while generating your authentication token..");
+                                res.end("An error occured while generating your authentication token...");
                             }
                             else
                             {                                
