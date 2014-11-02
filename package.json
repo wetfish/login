@@ -14,7 +14,8 @@
     "sendgrid": "*",
     "express-session": "*",
     "connect-redis": "*",
-    "mysql": "*"
+    "mysql": "*",
+    "request": "*"
   },
   "license": "GPL"
 }
