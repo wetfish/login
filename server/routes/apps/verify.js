@@ -66,7 +66,7 @@ module.exports = function(required)
         function(error, response)
         {
             // Verify the signature based on the shared app secret and the stored random data
-            console.log(error, response);
+            console.log("Server recieved:", error, response);
             // Delete the challenge from redis
             // Loop through member permissions and send response
             // Save the number of times a token has been used
