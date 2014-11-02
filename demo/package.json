@@ -1,0 +1,11 @@
+{
+  "name": "wetfish-login-demo",
+  "version": "0.1.0",
+  "author": "Rachel <rachel@wetfish.net>",
+  "description": "A login system for wetfish. Kinda like oAuth?",
+  "dependencies" : {
+    "express": "*",
+    "jquery": "*"
+  },
+  "license": "GPL"
+}
