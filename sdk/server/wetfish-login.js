@@ -28,7 +28,7 @@ var login =
     // A function for verifying tokens
     verify: function(token)
     {
-        request.get('http://login.wetfish.net/apps/verify', function(error, response)
+        request.get('https://login.wetfish.net/apps/verify', function(error, response)
         {
             // Parse inputs
             var input = JSON.parse(response.body);
@@ -36,12 +36,12 @@ var login =
             var data = new Buffer(input.data, 'base64');
 
             // Generate response
-            var response = crypto.createHmac("sha256", login.app_secret).update(challenge + data + login.app_id).digest("hex");
+            var resp = crypto.createHmac("sha256", login.app_secret).update(challenge + data + login.app_id).digest("hex");
 
             // Post request
-            request.post('http://login.wetfish.net/apps/verify', {form: {challenge: challenge, response: response}}, function(error, response)
+            request.post('https://login.wetfish.net/apps/verify', {form: {challenge: challenge, response: resp}}, function(error, response)
             {
-                console.log(JSON.parse(response.body));
+                console.log("THIS IS THE BODY!", response.body);
             });
         
         });

@@ -56,17 +56,20 @@ module.exports = function(required)
         var app_id = req.body.app;
         var challenge = req.body.challenge;
         var signature = req.body.signature;
+
+console.log(challenge, signature);
         
         // Look up app and challenge data
         async.parallel([
             model.async(null, model.app.get, [{app_id: app_id}]),
-            model.async(null, model.redis.get, ['challenge:'+challenge])
+            model.async(model.redis, model.redis.get, ['challenge:'+challenge])
         ],
 
         function(error, response)
         {
             // Verify the signature based on the shared app secret and the stored random data
             console.log("Server recieved:", error, response);
+            res.end("WOW HI");
             // Delete the challenge from redis
             // Loop through member permissions and send response
             // Save the number of times a token has been used
