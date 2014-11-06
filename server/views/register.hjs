@@ -3,7 +3,7 @@
 
     <div class="form-wrap">
         <div class="form">
-            <form method="post" action="/register" class="form-horizontal" role="form">
+            <form method="post" action="/register{{action}}{{id}}" class="form-horizontal" role="form">
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Username</label>
                     <div class="col-sm-9">

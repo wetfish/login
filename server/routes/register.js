@@ -64,6 +64,8 @@ module.exports = function(required)
         console.log("GET: /register");
         res.render('register', {
             title: 'Register',
+            action: (req.params.action) ? '/'+req.params.action : '',
+            id: (req.params.id) ? '/'+req.params.id : '',
             partials: {
                 head: 'partials/head',
                 header: 'partials/header',
@@ -74,7 +76,7 @@ module.exports = function(required)
 
     // TODO: Split this stuff into separate functions to avoid the MASSIVE NESTING
     // TODO: Normalize error output
-    app.post('/register', function(req, res)
+    app.post('/register/:action?/:id?', function(req, res)
     {
         // Users shouldn't be here if they're already logged in
         if(typeof req.session.user != "undefined")

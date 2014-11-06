@@ -87,8 +87,11 @@ function verify_login(req, callback)
                                     
                                     req.session.user = session;
                                     req.session.user_data = user_data;
+
+                                    var action = (req.params.action) ? 'apps/'+req.params.action : '';
+                                    var id = (req.params.id) ? '/'+req.params.id : '';
                                     
-                                    callback({'status': 'success', 'message': "You are now logged in.", 'redirect': {'url': '/', 'timeout': 2}});
+                                    callback({'status': 'success', 'message': "You are now logged in.", 'redirect': {'url': '/'+action+id, 'timeout': 2}});
                                 }
                             });
                         }
@@ -117,6 +120,8 @@ module.exports = function(required)
         console.log("GET: /login");
         res.render('login', {
             title: 'Login',
+            action: (req.params.action) ? '/'+req.params.action : '',
+            id: (req.params.id) ? '/'+req.params.id : '',
             partials: {
                 head: 'partials/head',
                 header: 'partials/header',
@@ -125,7 +130,7 @@ module.exports = function(required)
         });
     });
 
-    app.post('/login', function(req, res)
+    app.post('/login/:action?/:id?', function(req, res)
     {
         // Users shouldn't be here if they're already logged in
         if(typeof req.session.user_data != "undefined")
