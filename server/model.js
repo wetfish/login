@@ -214,6 +214,32 @@ var model =
             model.mysql.query("Insert into `app_tokens` set ?, `token_created` = now()", data, callback);
         }
 
+    },
+
+    secure_compare: function(str1, str2)
+    {
+        if(typeof str1 != "string" || typeof str2 != "string")
+            throw "Error: Must compare two strings";
+
+        str1 = str1.split('');
+        str2 = str2.split('');
+
+        var length = (str1.length > str2.length) ? str1.length : str2.length;
+        var equal = true;
+
+        for(var i = 0; i < length; i++)
+        {
+            if(typeof(str1[i]) == "undefined")
+                equal = false;
+
+            else if(typeof(str2[i]) == "undefined")
+                equal = false;
+
+            else if(str1[i] != str2[i])
+                equal = false;
+        }
+
+        return equal;
     }
 };
 
