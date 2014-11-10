@@ -39,7 +39,7 @@ var login =
             var resp = crypto.createHmac("sha256", login.app_secret).update(challenge + data + login.app_id).digest("hex");
 
             // Post request
-            request.post('https://login.wetfish.net/apps/verify', {form: {challenge: challenge, response: resp}}, function(error, response)
+            request.post('https://login.wetfish.net/apps/verify', {form: {challenge: challenge, response: resp, app: login.app_id}}, function(error, response)
             {
                 console.log("THIS IS THE BODY!", response.body);
             });

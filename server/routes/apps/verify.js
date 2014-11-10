@@ -61,19 +61,32 @@ console.log(challenge, signature);
         
         // Look up app and challenge data
         async.parallel([
+            model.async(null, model.user.joined, [{app_id: app_id, user_id: req.session.user.id}]),
             model.async(null, model.app.get, [{app_id: app_id}]),
             model.async(model.redis, model.redis.get, ['challenge:'+challenge])
         ],
 
         function(error, response)
         {
-            // Verify the signature based on the shared app secret and the stored random data
-            console.log("Server recieved:", error, response);
-            res.end("WOW HI");
-            // Delete the challenge from redis
-            // Loop through member permissions and send response
-            // Save the number of times a token has been used
-            
+            // Make sure the user has actually joined this app
+            if(!response[0])
+            {
+                res.end("You haven't joined this app.");
+            }
+            else
+            {
+                console.log("App:", response[1]);
+                console.log("Challenge:", challenge);
+                console.log("Challenge Data:", response[2]);
+                console.log("Signature:", signature);
+
+                // Verify the signature based on the shared app secret and the stored random data
+    //            console.log("Server recieved:", error, response);
+                res.end("WOW HI");
+                // Delete the challenge from redis
+                // Loop through member permissions and send response
+                // Save the number of times a token has been used
+            }
         });
 
 
