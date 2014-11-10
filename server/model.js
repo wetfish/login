@@ -206,7 +206,7 @@ var model =
     {
         get: function(token, callback)
         {
-            model.mysql.query("Select `token_id` from `app_tokens` where `token_id` = ?", token, callback);
+            model.mysql.query("Select * from `app_tokens` where `token_id` = ?", token, callback);
         },
 
         create: function(data, callback)

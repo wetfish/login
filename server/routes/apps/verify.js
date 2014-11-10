@@ -35,6 +35,8 @@ module.exports = function(required)
 
     app.get('/apps/verify', function(req, res)
     {
+        console.log("BOOOOP:", req.params, req.body, req.query);
+        
         // Generate a single-use token
         generate_token(function(challenge)
         {
@@ -57,8 +59,13 @@ module.exports = function(required)
         var challenge = req.body.challenge;
         var signature = req.body.signature;
 
-console.log(challenge, signature);
-        
+console.log(challenge, signature, req.session);
+
+/*        model.token.get(function(error, response)
+        {
+            console.log(error, response);
+        });
+  */      
         // Look up app and challenge data
         async.parallel([
             model.async(null, model.user.joined, [{app_id: app_id, user_id: req.session.user.id}]),

@@ -28,7 +28,7 @@ var login =
     // A function for verifying tokens
     verify: function(token)
     {
-        request.get('https://login.wetfish.net/apps/verify', function(error, response)
+        request.get('https://login.wetfish.net/apps/verify', {form: {token: token}}, function(error, response)
         {
             // Parse inputs
             var input = JSON.parse(response.body);
