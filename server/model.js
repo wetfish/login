@@ -127,6 +127,12 @@ var model =
             model.mysql.query(query, user_id, callback);
         },
 
+        app: function(select, callback)
+        {
+            select = model.where(select);
+            model.mysql.query("Select * from `app_users` where "+select.where+" limit 1", select.values, callback);
+        },
+
         // Helper function which returns true or false if a user has authorized an app
         joined: function(data, callback)
         {

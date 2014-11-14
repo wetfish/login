@@ -35,69 +35,92 @@ module.exports = function(required)
 
     app.get('/apps/verify', function(req, res)
     {
-        console.log("BOOOOP:", req.params, req.body, req.query);
+        console.log("GET: /apps/verify");
 
         model.token.get(req.body.token, function(error, response)
         {
-            console.log(error, response);
-        });
-        
-        // Generate a single-use token
-        generate_token(function(challenge)
-        {
-            // Generate some random data
-            var data = crypto.randomBytes(32).toString('base64');
+            if(response)
+            {
+                var saved = response[0];
+                
+                // Generate a single-use token
+                generate_token(function(challenge)
+                {
+                    // Generate some random data
+                    saved.challenge_data = crypto.randomBytes(32).toString('base64');
 
-            // Save in redis, set to expire after 60 seconds
-            model.redis.set('challenge:'+challenge, data, 'ex', 60);
-            
-            // Output challenge
-            res.end(JSON.stringify({challenge: challenge, data: data}));
+                    // Save in redis, set to expire after 60 seconds
+                    model.redis.set('challenge:'+challenge, JSON.stringify(saved), 'ex', 60);
+                    
+                    // Output challenge
+                    res.end(JSON.stringify({challenge: challenge, data: saved.challenge_data}));
+                });
+            }
+            else
+            {
+                res.end("Invalid token.");
+            }
         });
-
     });
 
     app.post('/apps/verify', function(req, res)
     {
+        console.log("POST: /apps/verify");
+        
         // 3rd party sends their single-use token along with a signature
-        var app_id = req.body.app;
         var challenge = req.body.challenge;
         var signature = req.body.signature;
 
-console.log(challenge, signature, req.session);
-
-/*        
-  */      
-        // Look up app and challenge data
-        async.parallel([
-            model.async(null, model.user.joined, [{app_id: app_id, user_id: req.session.user.id}]),
-            model.async(null, model.app.get, [{app_id: app_id}]),
-            model.async(model.redis, model.redis.get, ['challenge:'+challenge])
-        ],
-
-        function(error, response)
+        // First get the saved challenge data
+        model.redis.get('challenge:'+challenge, function(error, response)
         {
-            // Make sure the user has actually joined this app
-            if(!response[0])
+            if(response)
             {
-                res.end("You haven't joined this app.");
+                var saved = JSON.parse(response);
+
+                // Make sure this user has actually approved this app
+                model.user.joined({app_id: saved.app_id, user_id: saved.user_id}, function(joined)
+                {
+                    if(joined)
+                    {
+                        // Now look up app and challenge data
+                        async.parallel([
+                            model.async(null, model.user.app, [{app_id: saved.app_id, user_id: saved.user_id}]),
+                            model.async(null, model.app.get, [{app_id: saved.app_id}]),
+                        ],
+
+                        function(error, response)
+                        {
+                            console.log(error);
+                            if(response)
+                            {
+                                console.log("AAAAAA!", response);
+                                
+                                console.log("Signature:", signature);
+
+                                // Verify the signature based on the shared app secret and the stored random data
+                    //            console.log("Server recieved:", error, response);
+                                res.end("WOW HI");
+                                // Delete the challenge from redis
+                                // Loop through member permissions and send response
+                                // Save the number of times a token has been used
+                            }
+                            else
+                            {
+                                res.end("Unable to fetch app data.");
+                            }
+                        });
+                    }
+                    else
+                    {
+                        res.end("User no longer authorizes this app.");
+                    }
+                });
             }
             else
             {
-                console.log("App:", response[1]);
-                console.log("Challenge:", challenge);
-                console.log("Challenge Data:", response[2]);
-                console.log("Signature:", signature);
-
-                // Verify the signature based on the shared app secret and the stored random data
-    //            console.log("Server recieved:", error, response);
-                res.end("WOW HI");
-                // Delete the challenge from redis
-                // Loop through member permissions and send response
-                // Save the number of times a token has been used
+                res.end("Invalid challenge.");
             }
-        });
-
-
+        }); 
     });
 }

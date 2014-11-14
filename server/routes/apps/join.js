@@ -14,6 +14,8 @@ module.exports = function(required)
 
     app.get('/apps/join/:id', function(req, res)
     {
+        console.log("GET: /apps/join/"+req.params.id);
+
         // If the user isn't logged in, redirect to the login page
         if(typeof req.session.user == "undefined")
         {
@@ -47,7 +49,6 @@ module.exports = function(required)
                         application.req.ud = application.req.user_data;
                     }
                     
-                    console.log("GET: /apps/join/" + req.params.id);
                     res.render('apps/join', {
                         title: 'Do you authorize this app?',
                         user: req.session.user,
@@ -65,6 +66,8 @@ module.exports = function(required)
 
     app.post('/apps/join/:id', function(req, res)
     {
+        console.log("GET: /apps/join/"+req.params.id);
+
         // Users shouldn't be here if they're not logged in
         if(typeof req.session.user == "undefined")
         {
