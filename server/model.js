@@ -218,8 +218,12 @@ var model =
         create: function(data, callback)
         {
             model.mysql.query("Insert into `app_tokens` set ?, `token_created` = now()", data, callback);
-        }
+        },
 
+        use: function(token, callback)
+        {
+            model.mysql.query("Update `app_tokens` set `token_used` = `token_used` + 1 where `token_id` = ?", token, callback);
+        }
     },
 
     secure_compare: function(str1, str2)
