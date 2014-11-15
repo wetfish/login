@@ -41,8 +41,16 @@ var login =
             // Post request
             request.post('https://login.wetfish.net/apps/verify', {form: {challenge: challenge, signature: signature}}, function(error, response)
             {
-                console.log("THIS IS THE BODY!", response.body);
-                callback();
+                try
+                {
+                    var data = JSON.parse(response.body);
+                }
+                catch(error)
+                {
+                    var data = {'status': 'error', 'message': 'Unable to decode response from server'};
+                }
+                
+                callback(data);
             });
         
         });
