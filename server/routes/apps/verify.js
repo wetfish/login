@@ -110,7 +110,7 @@ module.exports = function(required)
                                     user.user_data = JSON.parse(user.user_data);
                                     user_app.user_permission = JSON.parse(user_app.user_permission);
 
-                                    var output = {};
+                                    var output = {user_id: saved.user_id};
 
                                     // Loop through member permissions and send response
                                     for(var i = 0, keys = Object.keys(user_app.user_permission), l = keys.length; i < l; i++)
