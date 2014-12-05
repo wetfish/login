@@ -14,14 +14,14 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">App ID</label>
                         <div class="col-sm-9">
-                            <input name="id" class="form-control" value="{{app.app_id}}" disabled>
+                            <input name="id" class="form-control" value="{{app.app_id}}" readonly>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="col-sm-3 control-label">App Secret</label>
                         <div class="col-sm-9">
-                            <input name="secret" class="form-control" value="{{app.app_secret}}" disabled>
+                            <input name="secret" class="form-control" value="{{app.app_secret}}" readonly>
                         </div>
                     </div>
 
