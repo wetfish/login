@@ -116,6 +116,11 @@ module.exports = function(required)
             res.redirect('/');
             return;
         }
+
+        if(req.params.action == 'join')
+        {
+            req.session.join = req.params.id;
+        }
         
         console.log("GET: /login");
         res.render('login', {

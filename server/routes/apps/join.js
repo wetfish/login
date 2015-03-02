@@ -19,6 +19,7 @@ module.exports = function(required)
         // If the user isn't logged in, redirect to the login page
         if(typeof req.session.user == "undefined")
         {
+            req.session.join = req.params.id;
             res.redirect('/login/join/'+req.params.id);
             return;
         }

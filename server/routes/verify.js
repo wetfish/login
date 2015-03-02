@@ -59,7 +59,14 @@ module.exports = function(required)
             
             if(response.status == 'success')
             {
-                message = '<div class="alert alert-success redirect" role="alert" redirect-url="/login" redirect-timeout="2"><strong>Success!</strong> '+response.message+'</div>';
+                var redirect = "/login";
+
+                if(req.session.join)
+                {
+                    redirect += "/join/" + req.session.join;
+                }
+                
+                message = '<div class="alert alert-success redirect" role="alert" redirect-url="'+redirect+'" redirect-timeout="2"><strong>Success!</strong> '+response.message+'</div>';
             }
             else
             {
