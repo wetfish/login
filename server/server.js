@@ -34,7 +34,7 @@ var required = {app: app, model: model, sendgrid: sendgrid};
 var routes =
 [
     'index', 'register', 'verify',
-    'login', 'logout', 'profile',
+    'login', 'logout', 'forgetful', 'profile',
     'apps/list', 'apps/create', 'apps/edit',
     'apps/join', 'apps/token', 'apps/manage',
     'apps/verify', 'apps/leave'
