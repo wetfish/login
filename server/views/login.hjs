@@ -21,6 +21,10 @@
                 <div class="form-group">
                     <div class="col-sm-offset-3 col-sm-9">
                         <input type="submit" value="Login" class="btn btn-primary">
+
+                        <a href="/forgetful" class="pull-right">
+                            Forgot password?
+                        </a>
                     </div>
                 </div>
             </form>
