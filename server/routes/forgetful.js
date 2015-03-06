@@ -1,5 +1,7 @@
 var extend = require('util')._extend;
 var validator = require('validator');
+var async = require('async');
+var bcrypt = require('bcrypt');
 var events = require('events')
 var event = new events.EventEmitter();
 var client, model, app, sendgrid;
@@ -140,6 +142,60 @@ module.exports = function(required)
 
     app.post('/reset', function(req, res)
     {
-        event.emit('message', req, res, {'status': 'error', 'message': 'YEEEHAW RESET THAT HO DANGIE!! ' + req.query.token});
+        // Verify if token is still valid
+        model.redis.get('forgotten:' + req.query.token, function(error, response)
+        {
+            if(error || !response)
+            {
+                event.emit('message', req, res, {'status': 'error', 'message': 'This token is invalid. It may have expired.'});
+                return;
+            }
+
+            var errors = {};
+            var fields = ['password', 'confirm'];
+
+            // Make sure all fields are entered
+            for(var i = 0, l = fields.length; i < l; i++)
+            {
+                var field = fields[i];
+
+                if(!req.body[field])
+                    errors[field] = "This field is required";
+            }
+
+            if(req.body.password.length < 8)
+                errors.password = "Your password is too short";
+
+            if(req.body.password != req.body.confirm)
+                errors.confirm = "Your passwords do not match";
+
+            // If an error has been set
+            if(Object.keys(errors).length)
+            {
+                event.emit('message', req, res, {'status': 'error', 'errors': errors});
+                return;
+            }
+
+            async.waterfall(
+            [
+                // Generate random salt
+                model.async(null, bcrypt.genSalt, [14]),
+                // Hash password using salt
+                model.async(null, bcrypt.hash, [req.body.password])
+            ],
+
+            function(error, password)
+            {
+                if(!error && response)
+                {
+                    event.emit('message', req, res, {'status': 'error', 'message': 'YEEEHAW RESET THAT HO DANGIE!! ' + req.query.token});
+                    
+                    // Save new password
+
+                    // Delete token
+                }
+            });
+
+        });
     });
 }
