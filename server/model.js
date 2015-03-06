@@ -2,6 +2,8 @@
 var async = require('async');
 var redis = require('redis');
 var mysql = require('mysql');
+var util = require('util');
+var crypto = require('crypto');
 
 // Redis connection model
 var model =
@@ -64,6 +66,67 @@ var model =
         }
 
         return {where: where.join(glue), values: values};
+    },
+
+    // Helper function to generate unique IDs
+    unique: function(type, source, select, callback)
+    {
+        // Generate a random ID
+        var salt = crypto.randomBytes(32);
+        var noise = crypto.randomBytes(32);
+        var unique_id = crypto.createHmac("sha256", salt).update(noise).digest("hex");
+
+        // Insert the ID into our select statement
+        if(typeof select == 'string')
+        {
+            select = util.format('select', unique_id);
+        }
+        // Or stringify the select statement if necessary
+        else
+        {
+            select = JSON.stringify(select);
+            select = util.format('select', unique_id);            
+            select = JSON.parse(select);
+        }
+
+        var data;
+
+        // Convert standalone functions to objects
+        if(typeof source == "function")
+        {
+            data = {source: source};
+
+            // Add appropriate this values for the database we're selecting from
+            if(type == 'redis')
+            {
+                data.self = model.redis;
+            }
+            else if(type == 'mysql')
+            {
+                data.self = model.mysql;
+            }
+        }
+        // Or set data to the source directly, allowing for custom this values
+        else
+        {
+            data = source;
+        }
+
+        // Check to see if the ID exists in the data source
+        data.source.call(data.self, select, function(error, response)
+        {
+            // This unique id already exists!
+            if(response && response.length)
+            {
+                model.unique(data, type, select, callback);
+            }
+
+            // Unique ID generated successfully
+            else
+            {
+                callback(error, unique_id);
+            }
+        });
     },
 
     // Functions for getting and setting user data
