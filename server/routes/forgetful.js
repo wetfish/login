@@ -176,6 +176,9 @@ module.exports = function(required)
                 return;
             }
 
+            // Get user data
+            var user = JSON.parse(response);
+
             async.waterfall(
             [
                 // Generate random salt
@@ -188,11 +191,42 @@ module.exports = function(required)
             {
                 if(!error && response)
                 {
-                    event.emit('message', req, res, {'status': 'error', 'message': 'YEEEHAW RESET THAT HO DANGIE!! ' + req.query.token});
+                    var select = {user_id: user.user_id};
+                    var data = {user_password: password};
                     
                     // Save new password
+                    model.user.set(select, data, function(error, response)
+                    {
+                        if(error)
+                        {
+                            event.emit('message', req, res, {'status': 'error', 'message': 'There was an error while communicating with the database. Please try again later!'});
+                            return;
+                        }
 
-                    // Delete token
+                        // Delete token
+                        model.redis.del('forgotten:' + req.query.token);
+
+                        // Redirect user
+                        var redirect = "/login";
+
+                        if(req.session.join)
+                        {
+                            redirect += "/join/" + req.session.join;
+                        }
+                        
+                        var message =
+                        {
+                            'status': 'success',
+                            'message': 'Your password has been reset! You may login now...',
+                            redirect:
+                            {
+                                url: redirect,
+                                timeout: 2
+                            }
+                        };
+
+                        event.emit('message', req, res, message);
+                    });
                 }
             });
 
