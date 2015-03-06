@@ -1,11 +1,29 @@
+var extend = require('util')._extend;
 var validator = require('validator');
 var events = require('events')
 var event = new events.EventEmitter();
-var client, model, app, sendgrid;;
+var client, model, app, sendgrid;
 
 event.on('message', function(req, res, data)
 {
     res.end(JSON.stringify(data));
+});
+
+event.on('render', function(req, res, options)
+{
+    var defaults =
+    {
+        user: req.session.user,
+        partials:
+        {
+            head: 'partials/head',
+            header: 'partials/header',
+            foot: 'partials/foot'
+        }
+    };
+
+    options = extend(defaults, options);
+    res.render(options.view, options);
 });
 
 module.exports = function(required)
@@ -17,15 +35,27 @@ module.exports = function(required)
     
     app.get('/forgetful', function(req, res)
     {
-        res.render('forgetful', {
-            title: 'Forgot your password?',
-            user: req.session.user,
-            partials: {
-                head: 'partials/head',
-                header: 'partials/header',
-                foot: 'partials/foot'
-            }
-        });
+        if(req.query.token)
+        {
+            // Check if token is valid
+            model.redis.get('forgotten:' + req.query.token, function(error, response)
+            {
+                if(error || !response)
+                {
+                    // Display error message
+                    event.emit('render', req, res, {view: 'message', title: 'Reset your password', message: {type: 'danger', message: "<strong>Error!</strong> This token is invalid. It may have expired."}});
+                    return;
+                }
+
+                // Display password reset page
+                event.emit('render', req, res, {view: 'reset', title: 'Reset your password', token: req.query.token});
+            });
+        }
+        else
+        {
+            // Display forgotten password page
+            event.emit('render', req, res, {view: 'forgetful', title: 'Forgot your password?'});
+        }
     });
 
     app.post('/forgetful', function(req, res)
@@ -81,12 +111,12 @@ module.exports = function(required)
                     fromname: 'wetfish.net',
                     subject : 'Password Reset Requested',
                     
-                    text    : 'Looks like you forgot the password for your wetfish account ('+user.user_name+')!\n\n' +
+                    text    : 'Looks like you forgot the password for your wetfish account ('+user.user_name+')\n\n' +
                               'Please paste the following link into your browser address bar to reset your password.\n\n' +
                               'https://login.wetfish.net/forgetful?token='+token+'\n\n' +
                               'If you did not request your password to be reset, please contact support@wetfish.net',
 
-                    html    : '<p>Looks like you forgot the password for your wetfish account (<strong>'+user.user_name+'</strong>)!</p>' +
+                    html    : '<p>Looks like you forgot the password for your wetfish account (<strong>'+user.user_name+'</strong>)</p>' +
                               '<p>Please click the following link to reset your password.</p>' +
                               '<a href="https://login.wetfish.net/forgetful?token='+token+'" target="_blank">https://login.wetfish.net/forgetful?token='+token+'</a>' +
                               '<p>If you did not request your password to be reset, please contact support@wetfish.net</p>'
@@ -106,5 +136,10 @@ module.exports = function(required)
                 });
             });
         });
+    });
+
+    app.post('/reset', function(req, res)
+    {
+        event.emit('message', req, res, {'status': 'error', 'message': 'YEEEHAW RESET THAT HO DANGIE!! ' + req.query.token});
     });
 }
