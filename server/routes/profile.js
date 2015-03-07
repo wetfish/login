@@ -23,7 +23,7 @@ function get_years()
 
 function get_months()
 {
-    var month_list = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'November', 'December'];
+    var month_list = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     var months = [];
 
     for(var i = 0, l = month_list.length; i < l; i++)
