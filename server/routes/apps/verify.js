@@ -41,7 +41,7 @@ module.exports = function(required)
         {
             if(response)
             {
-                var saved = response[0];
+                var saved = (response[0] || {});
                 
                 // Generate a single-use token
                 generate_token(function(challenge)
