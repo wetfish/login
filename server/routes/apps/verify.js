@@ -39,9 +39,9 @@ module.exports = function(required)
 
         model.token.get(req.body.token, function(error, response)
         {
-            if(response)
+            if(response.length)
             {
-                var saved = (response[0] || {});
+                var saved = response[0];
                 
                 // Generate a single-use token
                 generate_token(function(challenge)

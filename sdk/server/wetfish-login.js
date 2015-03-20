@@ -32,6 +32,13 @@ var login =
         {
             // Parse inputs
             var input = JSON.parse(response.body);
+
+            if(input.status == 'error')
+            {
+                callback(input);
+                return;
+            }
+
             var challenge = input.challenge;
             var data = new Buffer(input.data, 'base64');
 
