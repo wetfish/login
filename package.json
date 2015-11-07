@@ -17,6 +17,5 @@
     "mysql": "2.5.2",
     "request": "2.47.0"
   },
-  "main": "sdk/server/wetfish-login.js",
   "license": "GPL"
 }
