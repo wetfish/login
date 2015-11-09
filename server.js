@@ -1,36 +1,15 @@
-// Required local packages
+// Required gitignored config
 var config = require('./config');
-var model = require('./model');
 
 // Required packages from npm
 var path = require('path');
-var express = require('express');
-var session = require('express-session');
-var bodyParser = require('body-parser');
-var RedisStore = require('connect-redis')(session);
-var sendgrid = require('sendgrid')(config.sendgrid.username, config.sendgrid.password);
+var server = require('wetfish-server').createServer(config);
+server.sendgrid = require('sendgrid')(config.sendgrid.username, config.sendgrid.password);
 
-// Start express
-var app = express();
+// Add our custom model
+require('./model')(server.model);
 
-// Connect to redis and MySQL
-model.connect(config);
-
-// Use the existing connection for session data
-app.use(session({
-    store: new RedisStore({client: model.redis}),
-    secret: config.session.secret
-}));
-
-// Do everything else!
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hjs');
-
-// Required variables routes need access to
-var required = {app: app, model: model, sendgrid: sendgrid};
+// Array of routes to use
 var routes =
 [
     'index', 'register', 'verify',
@@ -42,10 +21,8 @@ var routes =
 
 routes.map(function(route)
 {
-    require('./routes/'+route+'.js')(required);
+    require('./routes/'+route+'.js')(server);
 });
-
-app.use(express.static(path.join(__dirname, 'static')));
 
 // Redirect to the home page on 404
 app.use(function(req, res, next)

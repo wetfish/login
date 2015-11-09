@@ -1,35 +1,7 @@
-// Required modules
-var async = require('async');
-var redis = require('redis');
-var mysql = require('mysql');
-var util = require('util');
-var crypto = require('crypto');
-
-// Redis connection model
-var model =
+module.exports = function(model)
 {
-    // Database connection variables
-    redis: false,
-    mysql: false,
-
-    // Function to connect to our databases
-    connect: function(config)
-    {
-        model.redis = redis.createClient(6301);
-        model.mysql = mysql.createConnection(
-        {
-            host     : 'localhost',
-            user     : config.mysql.username,
-            password : config.mysql.password,
-            database : config.mysql.database,
-            timezone : 'utc' 
-        });
-
-        model.mysql.connect();
-    },
-    
-    // Crazy function for generating functions to pass callbacks to async
-    async: function(scope, func, args)
+   // Crazy function for generating functions to pass callbacks to async
+    model.async = function(scope, func, args)
     {
         return function()
         {
@@ -51,7 +23,7 @@ var model =
         }
     },
 
-    where: function(select, glue)
+    model.where = function(select, glue)
     {
         if(typeof glue == "undefined")
             glue = " and ";
@@ -69,7 +41,7 @@ var model =
     },
 
     // Helper function to generate unique IDs
-    unique: function(type, source, select, callback)
+    model.unique = function(type, source, select, callback)
     {
         // Generate a random ID
         var salt = crypto.randomBytes(32);
@@ -130,7 +102,7 @@ var model =
     },
 
     // Functions for getting and setting user data
-    user:
+    model.user =
     {
         get: function(select, callback)
         {
@@ -218,7 +190,7 @@ var model =
         }
     },
 
-    app:
+    model.app =
     {
         get: function(select, callback)
         {
@@ -271,7 +243,7 @@ var model =
         },
     },
 
-    token:
+    model.token =
     {
         get: function(token, callback)
         {
@@ -289,7 +261,7 @@ var model =
         }
     },
 
-    secure_compare: function(str1, str2)
+    model.secure_compare = function(str1, str2)
     {
         if(typeof str1 != "string" || typeof str2 != "string")
             throw "Error: Must compare two strings";
@@ -314,6 +286,4 @@ var model =
 
         return equal;
     }
-};
-
-module.exports = model;
+}
