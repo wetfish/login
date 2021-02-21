@@ -4,7 +4,7 @@ var async = require('async');
 var bcrypt = require('bcrypt');
 var events = require('events')
 var event = new events.EventEmitter();
-var client, model, app, sendgrid;
+var client, model, app;
 
 event.on('message', function(req, res, data)
 {
@@ -33,8 +33,8 @@ module.exports = function(required)
     client = required.client;
     model = required.model;
     app = required.app;
-    sendgrid = required.sendgrid;
-    
+//    sendgrid = required.sendgrid;
+
     app.get('/forgetful', function(req, res)
     {
         if(req.query.token)
@@ -77,7 +77,7 @@ module.exports = function(required)
             select['user_name'] = account;
             type = 'username';
         }
-        
+
         model.user.get(select, function(error, response)
         {
             if(error)
@@ -106,13 +106,17 @@ module.exports = function(required)
                 // Save token for 24 hours
                 model.redis.set('forgotten:' + token, JSON.stringify(user), 'ex', '86400');
 
+                event.emit('message', req, res, {'status': 'success', 'message': 'Sorry, our email API is not working at the moment. Please <a href="https://wet.fish/chat" target="_blank">get on IRC</a> to reset your password.'});
+
+                /*
+
                 var message =
                 {
                     to      : user.user_email,
                     from    : 'noreply@wetfish.net',
                     fromname: 'wetfish.net',
                     subject : 'Password Reset Requested',
-                    
+
                     text    : 'Looks like you forgot the password for your wetfish account ('+user.user_name+')\n\n' +
                               'Please paste the following link into your browser address bar to reset your password.\n\n' +
                               'https://login.wetfish.net/forgetful?token='+token+'\n\n' +
@@ -125,6 +129,7 @@ module.exports = function(required)
                 };
 
                 // Send email
+
                 sendgrid.send(message, function(error, response)
                 {
                     if(error)
@@ -136,6 +141,7 @@ module.exports = function(required)
 
                     event.emit('message', req, res, {'status': 'success', 'message': 'A reset code has been emailed to you!'});
                 });
+*/
             });
         });
     });
@@ -193,7 +199,7 @@ module.exports = function(required)
                 {
                     var select = {user_id: user.user_id};
                     var data = {user_password: password};
-                    
+
                     // Save new password
                     model.user.set(select, data, function(error, response)
                     {
@@ -213,7 +219,7 @@ module.exports = function(required)
                         {
                             redirect += "/join/" + req.session.join;
                         }
-                        
+
                         var message =
                         {
                             'status': 'success',
