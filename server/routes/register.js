@@ -5,7 +5,7 @@ var bcrypt = require('bcrypt');
 var crypto = require('crypto');
 
 // Variables passed from server.js
-var client, model, app, sendgrid;
+var client, model, app;
 
 
 function check_existing(username, email, callback)
@@ -50,8 +50,8 @@ module.exports = function(required)
     client = required.client;
     model = required.model;
     app = required.app;
-    sendgrid = required.sendgrid;
-    
+//    sendgrid = required.sendgrid;
+
     app.get('/register/:action?/:id?', function(req, res)
     {
         // Users shouldn't be here if they're already logged in
@@ -65,7 +65,7 @@ module.exports = function(required)
         {
             req.session.join = req.params.id;
         }
-        
+
         console.log("GET: /register");
         res.render('register', {
             title: 'Register',
@@ -124,7 +124,7 @@ module.exports = function(required)
 
             if(!validator.isEmail(email))
                 errors.email = "Your email is invalid";
-                
+
             if(req.body.password.length < 8)
                 errors.password = "Your password is too short";
 
@@ -165,11 +165,15 @@ module.exports = function(required)
                                     user_token: token,
                                     user_verified: 0
                                 };
-                                
+
                                 model.user.register(data, function(error, response)
                                 {
                                     if(!error)
                                     {
+                                        // Just make the user click on a link instead of verifying their email
+                                        res.send(JSON.stringify({'status': 'success', 'message': 'Thank you for registering! Please click on <a href="https://login.wetfish.net/verify?token='+token+'">this link</a> to verify your account.'}));
+
+                                        /*
                                         // Send verification email
                                         var message =
                                         {
@@ -177,7 +181,7 @@ module.exports = function(required)
                                             from    : 'noreply@wetfish.net',
                                             fromname: 'wetfish.net',
                                             subject : 'Account Activation Code',
-                                            
+
                                             text    : 'Your wetfish account ('+username+') has been successfully registered!\n\n' +
                                                       'Please paste the following link into your browser address bar to activate your account.\n\n' +
                                                       'https://login.wetfish.net/verify?token='+token+'\n\n' +
@@ -203,6 +207,7 @@ module.exports = function(required)
 
                                             res.end();
                                         });
+*/
                                     }
                                     else
                                     {

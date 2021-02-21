@@ -8,7 +8,7 @@ var express = require('express');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var RedisStore = require('connect-redis')(session);
-var sendgrid = require('sendgrid')(config.sendgrid.username, config.sendgrid.password);
+//var sendgrid = require('sendgrid')(config.sendgrid.username, config.sendgrid.password);
 
 // Start express
 var app = express();
@@ -30,7 +30,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hjs');
 
 // Required variables routes need access to
-var required = {app: app, model: model, sendgrid: sendgrid};
+var required = {app: app, model: model};
 var routes =
 [
     'index', 'register', 'verify',
